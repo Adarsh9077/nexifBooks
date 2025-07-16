@@ -24,10 +24,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             children: [
               HeightSpacer(height: 80),
               Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 0,
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                child: Image.asset(
+                  "assets/images/e_invoice.png",
+                  height: 350,
+                  width: 320,
                 ),
-                child: Image.asset("assets/images/e_invoice.png",height: 350,width: 320,),
               ),
             ],
           ),

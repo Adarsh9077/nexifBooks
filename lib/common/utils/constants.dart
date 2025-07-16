@@ -21,5 +21,4 @@ class AppConst {
   static double kPadding = 16.sp;
   static double kMargin = 16.sp;
   static double kFontSize = 16.sp;
-
 }
