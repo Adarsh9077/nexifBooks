@@ -16,17 +16,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppConst.kLight,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: AppConst.kPadding),
           child: ListView(
             children: [
-              HeightSpacer(height: 120),
+              HeightSpacer(height: 80),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: AppConst.kPadding * 1.25,
+                  horizontal: 0,
                 ),
-                child: Image.asset("assets/images/e_invoice.png"),
+                child: Image.asset("assets/images/e_invoice.png",height: 350,width: 320,),
               ),
             ],
           ),
