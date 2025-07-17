@@ -41,6 +41,7 @@ class CustomOtlBtn extends StatelessWidget {
         ),
         child: Center(
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               if (iconData) iconWidget!,
               ReusableText(
