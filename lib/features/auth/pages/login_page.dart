@@ -6,6 +6,7 @@ import 'package:nexifbook/common/widget/custom_otl_btn.dart';
 import 'package:nexifbook/common/widget/custom_text_field.dart';
 import 'package:nexifbook/common/widget/height_spacer.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
+import 'package:nexifbook/features/nexif_book/pages/homepage.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -89,6 +90,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 color2: AppConst.kLight,
                 text: "Login",
                 iconData: false,
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                },
               ),
               TextButton(
                 onPressed: () {},
