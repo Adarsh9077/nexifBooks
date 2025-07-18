@@ -5,6 +5,7 @@ import 'package:nexifbook/common/widget/app_style.dart';
 import 'package:nexifbook/common/widget/height_spacer.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
 import 'package:nexifbook/features/nexif_book/widgets/app_bar.dart';
+import 'package:nexifbook/features/nexif_book/widgets/custom_drawer.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -23,7 +24,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     // throw UnimplementedError();
     return Scaffold(
       appBar: CustomAppBar(title: "Dashboard", isHomePage: true),
-      drawer: Drawer(backgroundColor: AppConst.kLight, child: Placeholder()),
+      drawer: CustomDrawer(),
       drawerEdgeDragWidth: 50,
       backgroundColor: AppConst.kLight,
       body: Column(
