@@ -21,8 +21,6 @@ class DrawerPageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    // throw UnimplementedError();
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: GestureDetector(

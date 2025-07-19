@@ -148,7 +148,7 @@ class CustomDrawer extends ConsumerWidget {
 
                 children: [
                   ReusableText(
-                    text: "Adarsh Kumar",
+                    text: "Abhinav Kaul",
                     style: appStyle(
                       AppConst.kFontSize,
                       FontWeight.bold,
@@ -156,7 +156,7 @@ class CustomDrawer extends ConsumerWidget {
                     ),
                   ),
                   ReusableText(
-                    text: "adarsh16nexif@gmail.com",
+                    text: "abhinav16nexif@gmail.com",
                     style: appStyle(
                       AppConst.kFontSize * 0.9375,
                       FontWeight.w500,
