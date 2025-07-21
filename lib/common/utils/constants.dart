@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppConst {
   AppConst._();
@@ -15,10 +15,10 @@ class AppConst {
   static const Color kGreen = Color(0xFF20A31E);
   static const Color kYellow = Color(0xFFF9F900);
 
-  static double kWidth = 375.w;
-  static double kHeight = 825.h;
-  static double kRadius = 10.r;
-  static double kPadding = 16.sp;
-  static double kMargin = 16.sp;
-  static double kFontSize = 16.sp;
+  static double kWidth = 375;
+  static double kHeight = 825;
+  static double kRadius = 10;
+  static double kPadding = 16;
+  static double kMargin = 16;
+  static double kFontSize = 16;
 }
