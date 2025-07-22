@@ -18,23 +18,23 @@ class PageOne extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
+            padding: EdgeInsets.symmetric(horizontal: 00),
             child: Image.asset("assets/images/e_invoice.png"),
           ),
-          HeightSpacer(height: 60),
+          HeightSpacer(height: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ReusableText(
-                text: "Hey there, Welcome to NexifBooks!",
-                style: appStyle(26, FontWeight.bold, AppConst.kBlueLight),
+              Text(
+                "Hey there,\nWelcome to NexifBooks!",
+                style: appStyle(35, FontWeight.bold, AppConst.kBlueLight),
+                textAlign: TextAlign.center,
               ),
               HeightSpacer(height: 10),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30),
                 child: ReusableText(
-                  text:
-                      "Cheers to easy business management!!",
+                  text: "Cheers to easy business management!!",
                   style: appStyle(20, FontWeight.normal, AppConst.kGreyLight),
                 ),
               ),

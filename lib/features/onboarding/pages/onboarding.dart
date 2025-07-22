@@ -4,6 +4,8 @@ import 'package:nexifbook/common/widget/app_style.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
 import 'package:nexifbook/common/widget/width_spacer.dart';
 import 'package:nexifbook/features/onboarding/widget/page_one.dart';
+import 'package:nexifbook/features/onboarding/widget/page_three.dart';
+import 'package:nexifbook/features/onboarding/widget/page_two.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Onboarding extends StatefulWidget {
@@ -32,7 +34,7 @@ class _OnboardingState extends State<Onboarding> {
           PageView(
             physics: AlwaysScrollableScrollPhysics(),
             controller: pageController,
-            children: [PageOne(), PageOne()],
+            children: [PageOne(), PageTwo(), PageThree()],
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -90,7 +92,7 @@ class _OnboardingState extends State<Onboarding> {
                     },
                     child: SmoothPageIndicator(
                       controller: pageController,
-                      count: 2,
+                      count: 3,
                       effect: WormEffect(
                         dotHeight: 12,
                         dotWidth: 16,
