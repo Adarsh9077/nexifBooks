@@ -41,30 +41,44 @@ class _OnboardingState extends State<Onboarding> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      pageController.nextPage(
-                        duration: Duration(milliseconds: 600),
-                        curve: Curves.ease,
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.chevron_right,
-                          size: 30,
-                          color: AppConst.kBKDark,
-                        ),
-                        WidthSpacer(width: 5),
-                        ReusableText(
-                          text: "Skip",
-                          style: appStyle(
-                            16,
-                            FontWeight.w600,
-                            AppConst.kBKDark,
-                          ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppConst.kBlueLight,
+                          blurRadius: 20,
+                          blurStyle: BlurStyle.normal,
                         ),
                       ],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        pageController.nextPage(
+                          duration: Duration(milliseconds: 600),
+                          curve: Curves.ease,
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.chevron_right,
+                            size: 30,
+                            color: AppConst.kLight,
+                          ),
+                          WidthSpacer(width: 0),
+                          ReusableText(
+                            text: "Skip",
+                            style: appStyle(
+                              16,
+                              FontWeight.w600,
+                              AppConst.kLight,
+                            ),
+                          ),
+                          WidthSpacer(width: 8),
+                        ],
+                      ),
                     ),
                   ),
                   GestureDetector(
