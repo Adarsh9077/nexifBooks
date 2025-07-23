@@ -6,6 +6,7 @@ import 'package:nexifbook/common/widget/custom_otl_btn.dart';
 import 'package:nexifbook/common/widget/custom_text_field.dart';
 import 'package:nexifbook/common/widget/height_spacer.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
+import 'package:nexifbook/features/auth/controller/auth_controller.dart';
 import 'package:nexifbook/features/nexif_book/pages/homepage.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -22,6 +23,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authControllerProvider);
+    final authController = ref.read(authControllerProvider.notifier);
     return Scaffold(
       backgroundColor: AppConst.kLight,
       body: SafeArea(
@@ -83,20 +86,44 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 obscureText: !showPassword,
               ),
               HeightSpacer(height: 20),
-              CustomOtlBtn(
-                width: AppConst.kWidth * 0.9,
-                height: 52,
-                color: AppConst.kBlueLight,
-                color2: AppConst.kLight,
-                text: "Login",
-                iconData: false,
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
-                },
-              ),
+              if (authState.isLoading)
+                Center(child: SizedBox(child: CircularProgressIndicator()))
+              else
+                CustomOtlBtn(
+                  width: AppConst.kWidth * 0.9,
+                  height: 52,
+                  color: AppConst.kBlueLight,
+                  color2: AppConst.kLight,
+                  text: "Login",
+                  iconData: false,
+                  onTap: () async {
+                    final success = await authController.login(
+                      emailController.text,
+                      passwordController.text,
+                    );
+                    if (success) {
+                      if (!mounted) return;
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
+                    }
+                    else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "Login failed. Please check your credentials.",
+                            style: appStyle(
+                              16,
+                              FontWeight.bold,
+                              AppConst.kRed,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
               TextButton(
                 onPressed: () {},
                 child: ReusableText(

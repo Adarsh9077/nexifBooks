@@ -30,6 +30,7 @@ class AuthService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('access_key', access);
       await prefs.setString('refresh_token', refresh);
+      await prefs.setBool("is_logged_in", true);
       return true;
     } catch (e) {
       print("Login error: $e");
