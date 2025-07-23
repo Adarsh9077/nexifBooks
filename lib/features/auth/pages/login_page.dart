@@ -8,6 +8,7 @@ import 'package:nexifbook/common/widget/height_spacer.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
 import 'package:nexifbook/features/auth/controller/auth_controller.dart';
 import 'package:nexifbook/features/nexif_book/pages/homepage.dart';
+import 'package:nexifbook/features/nexif_book/pages/json_display_page.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -107,17 +108,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         context,
                         MaterialPageRoute(builder: (context) => HomePage()),
                       );
-                    }
-                    else {
+                    } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
                             "Login failed. Please check your credentials.",
-                            style: appStyle(
-                              16,
-                              FontWeight.bold,
-                              AppConst.kRed,
-                            ),
+                            style: appStyle(16, FontWeight.bold, AppConst.kRed),
                           ),
                         ),
                       );
