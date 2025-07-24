@@ -22,8 +22,6 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    // throw UnimplementedError();
     return Scaffold(
       appBar: CustomAppBar(title: "Dashboard", isHomePage: true),
       drawer: CustomDrawer(),

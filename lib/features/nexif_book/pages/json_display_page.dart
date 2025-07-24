@@ -32,13 +32,10 @@ class _JsonDisplayPageState extends State<JsonDisplayPage> {
     final company = await AuthService.getCompanyDetails();
     userData = user;
     companyData = company;
-    print(userData);
-    print("-------userData--------");
-    print(user);
-    print("---------user----------");
-    print(companyData);
-    print("---------companyData-------------");
-    print(company);
+    print("user Data");
+    print(JsonEncoder.withIndent("-> ").convert(userData));
+    print("Company data");
+    print(JsonEncoder.withIndent("-> ").convert(companyData));
     setState(() {});
   }
 
@@ -59,8 +56,7 @@ class _JsonDisplayPageState extends State<JsonDisplayPage> {
               ),
               HeightSpacer(height: 20),
               Text(
-                // JsonEncoder.withIndent("  ").convert(userData),
-                userData.toString(),
+                JsonEncoder.withIndent("-> ").convert(userData),
                 style: appStyle(18, FontWeight.normal, AppConst.kGreyLight),
               ),
               HeightSpacer(height: 20),
@@ -70,7 +66,7 @@ class _JsonDisplayPageState extends State<JsonDisplayPage> {
               ),
               HeightSpacer(height: 20),
               Text(
-                const JsonEncoder.withIndent("  ").convert(companyData),
+                const JsonEncoder.withIndent(" ").convert(companyData),
                 style: appStyle(18, FontWeight.normal, AppConst.kGreyLight),
               ),
             ],

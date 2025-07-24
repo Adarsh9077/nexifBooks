@@ -20,7 +20,7 @@ class CustomDrawer extends ConsumerWidget {
           "pageTitle": "Purchase",
           "icon": Icons.shopping_bag_outlined,
           "pageDescription": "Purchase Description",
-          "": "",
+          "pageLink": "",
         },
         {
           "pageTitle": "Sales",
@@ -112,15 +112,11 @@ class CustomDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
-    // throw UnimplementedError();
     return Drawer(
       backgroundColor: AppConst.kLight,
       elevation: 2,
       width: AppConst.kWidth * 0.85,
       child: ListView(
-        // shrinkWrap: true,
-        // physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.all(AppConst.kPadding),
         children: [
           HeightSpacer(height: 40),
@@ -131,7 +127,6 @@ class CustomDrawer extends ConsumerWidget {
               CircleAvatar(
                 radius: AppConst.kRadius * 3.5,
                 backgroundColor: AppConst.kBlueLight,
-
                 child: ReusableText(
                   text: "AK",
                   style: appStyle(
