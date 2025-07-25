@@ -8,7 +8,6 @@ import 'package:nexifbook/common/widget/height_spacer.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
 import 'package:nexifbook/features/auth/controller/auth_controller.dart';
 import 'package:nexifbook/features/nexif_book/pages/homepage.dart';
-import 'package:nexifbook/features/nexif_book/pages/json_display_page.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});

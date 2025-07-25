@@ -17,7 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           : ReusableText(
               text: title,
               style: appStyle(
-                AppConst.kFontSize,
+                AppConst.kFontSize * 1.25,
                 FontWeight.bold,
                 AppConst.kBKDark,
               ),
@@ -34,13 +34,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
             )
           : IconButton(
+              padding: EdgeInsets.symmetric(horizontal: 32),
               onPressed: () {
                 Navigator.pop(context);
               },
               icon: Icon(
                 Icons.arrow_back_ios,
-                color: AppConst.kBKDark,
-                size: 12,
+                color: AppConst.kBlack,
+                size: 22,
               ),
             ),
       actions: [
