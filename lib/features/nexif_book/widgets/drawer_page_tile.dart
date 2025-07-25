@@ -9,14 +9,14 @@ class DrawerPageTile extends StatelessWidget {
   final String pageTitle;
   final String pageDescription;
   final IconData leadingIcon;
-  final Function onTap;
+  final void Function()? onTap;
 
   const DrawerPageTile({
     super.key,
     required this.pageTitle,
     required this.pageDescription,
     required this.leadingIcon,
-    required this.onTap,
+    this.onTap,
   });
 
   @override
@@ -24,7 +24,7 @@ class DrawerPageTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: GestureDetector(
-        onTap: () {},
+        onTap: onTap,
         child: Row(
           children: [
             WidthSpacer(width: 15),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:nexifbook/common/routes/routes.dart';
 import 'package:nexifbook/common/utils/constants.dart';
 import 'package:nexifbook/common/widget/app_style.dart';
 import 'package:nexifbook/common/widget/expansion_tile_custom.dart';
@@ -17,16 +18,16 @@ class CustomDrawer extends ConsumerWidget {
       "icon": Icons.dashboard,
       "children": [
         {
-          "pageTitle": "Purchase",
+          "pageTitle": "Purchase Dashboard",
           "icon": Icons.shopping_bag_outlined,
           "pageDescription": "Purchase Description",
-          "pageLink": "",
+          "pageLink": Routes.purchaseDashBoard,
         },
         {
-          "pageTitle": "Sales",
+          "pageTitle": "Sales Dashboard",
           "icon": Icons.show_chart,
           "pageDescription": "Sales Description",
-          "": "",
+          "pageLink": Routes.salesDashBoard,
         },
       ],
     },
@@ -38,19 +39,19 @@ class CustomDrawer extends ConsumerWidget {
           "pageTitle": "Customers",
           "icon": Icons.people_alt,
           "pageDescription": "Customers Description",
-          "": "",
+          "pageLink": Routes.customersSales,
         },
         {
           "pageTitle": "Sales Invoices",
           "icon": Icons.receipt_long,
           "pageDescription": "Sales Invoice Description",
-          "": "",
+          "pageLink": Routes.salesInvoicesSales,
         },
         {
           "pageTitle": "Sales Returns",
           "icon": Icons.keyboard_return,
           "pageDescription": "Sales Return Description",
-          "": "",
+          "pageLink": Routes.salesReturnsSales,
         },
       ],
     },
@@ -62,19 +63,19 @@ class CustomDrawer extends ConsumerWidget {
           "pageTitle": "Vendors",
           "icon": Icons.storefront,
           "pageDescription": "Vendor Description",
-          "": "",
+          "pageLink": Routes.vendorPurchase,
         },
         {
           "pageTitle": "Purchase Invoices",
           "icon": Icons.receipt,
           "pageDescription": "Purchase Invoice Description",
-          "": "",
+          "pageLink": Routes.purchaseInvoicesPurchase,
         },
         {
           "pageTitle": "Purchase Returns",
           "icon": Icons.undo,
           "pageDescription": "Purchase Return Description",
-          "": "",
+          "pageLink": Routes.purchaseReturnsPurchase,
         },
       ],
     },
@@ -86,13 +87,13 @@ class CustomDrawer extends ConsumerWidget {
           "pageTitle": "Items",
           "icon": Icons.category,
           "pageDescription": "Items Description",
-          "": "",
+          "pageLink": Routes.itemsStock,
         },
         {
           "pageTitle": "Current Stock",
           "icon": Icons.inventory_2,
           "pageDescription": "Current Stock Description",
-          "": "",
+          "pageLink": Routes.currentStock,
         },
       ],
     },
@@ -104,7 +105,7 @@ class CustomDrawer extends ConsumerWidget {
           "pageTitle": "Ledger",
           "icon": Icons.book,
           "pageDescription": "Ledger Description",
-          "": "",
+          "pageLink": Routes.ledger,
         },
       ],
     },
@@ -176,7 +177,16 @@ class CustomDrawer extends ConsumerWidget {
                     pageDescription:
                         "${drawerItems[i]["children"][j]["pageDescription"]}",
                     leadingIcon: drawerItems[i]["children"][j]["icon"],
-                    onTap: () {},
+                    onTap: () {
+                      Scaffold.of(context).closeDrawer();
+                      print(
+                        drawerItems[i]["children"][j]["pageLink"].toString(),
+                      );
+                      Navigator.pushNamed(
+                        context,
+                        drawerItems[i]["children"][j]["pageLink"],
+                      );
+                    },
                   ),
               ],
             ),

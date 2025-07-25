@@ -2,8 +2,8 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nexifbook/common/utils/constants.dart';
-import 'package:nexifbook/features/onboarding/pages/onboarding.dart';
 import 'package:nexifbook/features/onboarding/pages/splash_routes.dart';
+import 'common/routes/routes.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
           ),
           themeMode: ThemeMode.light,
           debugShowCheckedModeBanner: false,
+          onGenerateRoute: Routes.onGenerateRoute,
           home: SplashRoutes(),
         );
       },
