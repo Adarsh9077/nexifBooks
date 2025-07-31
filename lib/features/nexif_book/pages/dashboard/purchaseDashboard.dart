@@ -8,7 +8,7 @@ class PurchaseDashboard extends ConsumerStatefulWidget {
   const PurchaseDashboard({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
+  ConsumerState<PurchaseDashboard> createState() =>
       _PurchaseDashboardState();
 }
 

@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nexifbook/common/utils/constants.dart';
 import 'package:nexifbook/common/widget/app_style.dart';
-import 'package:nexifbook/common/widget/custom_otl_btn.dart';
-import 'package:nexifbook/common/widget/height_spacer.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
+import 'bottom_sheet_filter.dart';
 
 class CustomTableBarChart extends ConsumerWidget {
   const CustomTableBarChart({super.key});
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
         color: AppConst.kLight,
@@ -36,61 +35,7 @@ class CustomTableBarChart extends ConsumerWidget {
                       // sheetAnimationStyle: _animationStyle,
                       scrollControlDisabledMaxHeightRatio: .25,
                       builder: (BuildContext context) {
-                        return SizedBox.expand(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 30,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CustomOtlBtn(
-                                      width: AppConst.kWidth * 0.5,
-                                      height: 52,
-                                      color: AppConst.kBlueLight,
-                                      text: "Qty",
-                                      iconData: false,
-                                    ),
-                                    CustomOtlBtn(
-                                      width: AppConst.kWidth * 0.5,
-                                      height: 52,
-                                      color: AppConst.kBlueLight,
-                                      text: "Amount",
-                                      iconData: false,
-                                    ),
-                                  ],
-                                ),
-                                HeightSpacer(height: 20),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CustomOtlBtn(
-                                      width: AppConst.kWidth * 0.5,
-                                      height: 52,
-                                      color: AppConst.kBlueLight,
-                                      text: "Table",
-                                      iconData: false,
-                                    ),
-                                    CustomOtlBtn(
-                                      width: AppConst.kWidth * 0.5,
-                                      height: 52,
-                                      color: AppConst.kBlueLight,
-                                      text: "Bar",
-                                      iconData: false,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
+                        return BottomSheetFilter();
                       },
                     );
                   },
@@ -98,6 +43,7 @@ class CustomTableBarChart extends ConsumerWidget {
               ],
             ),
           ),
+          Text("data",style: TextStyle(fontSize: 32),)
         ],
       ),
     );
