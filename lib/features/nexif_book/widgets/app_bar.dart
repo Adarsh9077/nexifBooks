@@ -45,41 +45,76 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
       actions: [
-        GestureDetector(
-          onTap: () {},
-          child: Container(
-            // width: 80,
-            padding: EdgeInsets.symmetric(horizontal: AppConst.kPadding),
-            decoration: BoxDecoration(
-              // borderRadius: BorderRadius.circular(AppConst.kRadius * 0.5),
-              // border: Border.all(width: .5, color: AppConst.kBlueLight),
-            ),
-            child: Row(
-              children: [
-                // Image.network(
-                //   "src",
-                //   width: 35,
-                //   height: 35,
-                //   fit: BoxFit.cover,
-                //   errorBuilder: (_, __, ___) => Placeholder(),
-                // ),
-                CircleAvatar(
-                  radius: AppConst.kRadius * 1.625,
-                  backgroundColor: AppConst.kBlueLight,
+        PopupMenuButton(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: CircleAvatar(
+              radius: AppConst.kRadius * 1.625,
+              backgroundColor: AppConst.kBlueLight,
 
-                  child: ReusableText(
-                    text: "AK",
-                    style: appStyle(
-                      AppConst.kFontSize * 0.875,
-                      FontWeight.w600,
-                      AppConst.kLight,
-                    ),
-                  ),
+              child: ReusableText(
+                text: "AK",
+                style: appStyle(
+                  AppConst.kFontSize * 0.875,
+                  FontWeight.w600,
+                  AppConst.kLight,
                 ),
-              ],
+              ),
             ),
           ),
+          onSelected: (value) {
+            print(value);
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem(
+                value: 'Organization Profile',
+                child: Text("Organization Profile"),
+              ),
+              PopupMenuItem(value: 'My Tickets', child: Text("My Tickets")),
+              PopupMenuItem(
+                value: 'Change Password',
+                child: Text("Change Password"),
+              ),
+              PopupMenuItem(value: 'Sign Out', child: Text("Sign Out")),
+            ];
+          },
         ),
+        // GestureDetector(
+        //   onTap: () {},
+        //   child: Container(
+        //     // width: 80,
+        //     padding: EdgeInsets.symmetric(horizontal: AppConst.kPadding),
+        //     decoration: BoxDecoration(
+        //       // borderRadius: BorderRadius.circular(AppConst.kRadius * 0.5),
+        //       // border: Border.all(width: .5, color: AppConst.kBlueLight),
+        //     ),
+        //     child: Row(
+        //       children: [
+        //         // Image.network(
+        //         //   "src",
+        //         //   width: 35,
+        //         //   height: 35,
+        //         //   fit: BoxFit.cover,
+        //         //   errorBuilder: (_, __, ___) => Placeholder(),
+        //         // ),
+        //         CircleAvatar(
+        //           radius: AppConst.kRadius * 1.625,
+        //           backgroundColor: AppConst.kBlueLight,
+        //
+        //           child: ReusableText(
+        //             text: "AK",
+        //             style: appStyle(
+        //               AppConst.kFontSize * 0.875,
+        //               FontWeight.w600,
+        //               AppConst.kLight,
+        //             ),
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

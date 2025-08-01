@@ -3,10 +3,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nexifbook/common/utils/constants.dart';
 import 'package:nexifbook/common/widget/app_style.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
+import '../dashboard_controller/dashboard_controller.dart';
 import 'bottom_sheet_filter.dart';
+import 'custom_table.dart';
 
 class CustomTableBarChart extends ConsumerWidget {
-  const CustomTableBarChart({super.key});
+  final String title;
+
+  const CustomTableBarChart({super.key, required this.title});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,7 +28,7 @@ class CustomTableBarChart extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ReusableText(
-                  text: "Top SKUs Purchased",
+                  text: title,
                   style: appStyle(18, FontWeight.bold, AppConst.kBlack),
                 ),
                 GestureDetector(
@@ -43,7 +47,18 @@ class CustomTableBarChart extends ConsumerWidget {
               ],
             ),
           ),
-          Text("data",style: TextStyle(fontSize: 32),)
+          Text("data", style: TextStyle(fontSize: 32)),
+          Container(),
+          Consumer(
+            builder: (context, ref, child) {
+              bool tableBtnState = ref.watch(tableProvider);
+              return Container(
+                child: tableBtnState
+                    ? CustomTable()
+                    : Text("Bars", style: TextStyle(fontSize: 32)),
+              );
+            },
+          ),
         ],
       ),
     );

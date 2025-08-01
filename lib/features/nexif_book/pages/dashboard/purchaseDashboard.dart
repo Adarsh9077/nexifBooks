@@ -8,20 +8,13 @@ class PurchaseDashboard extends ConsumerStatefulWidget {
   const PurchaseDashboard({super.key});
 
   @override
-  ConsumerState<PurchaseDashboard> createState() =>
-      _PurchaseDashboardState();
+  ConsumerState<PurchaseDashboard> createState() => _PurchaseDashboardState();
 }
 
 class _PurchaseDashboardState extends ConsumerState<PurchaseDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomSheet: BottomSheet(
-        onClosing: () {},
-        builder: (context) {
-          return SizedBox();
-        },
-      ),
       backgroundColor: AppConst.kLight,
       appBar: const CustomAppBar(
         title: "Purchase Dashboard",
@@ -29,9 +22,7 @@ class _PurchaseDashboardState extends ConsumerState<PurchaseDashboard> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          // Scaffold.of(context).
           return Future<void>.delayed(const Duration(seconds: 3));
-
         },
         notificationPredicate: (ScrollNotification notification) {
           return notification.depth == 1;
@@ -44,7 +35,9 @@ class _PurchaseDashboardState extends ConsumerState<PurchaseDashboard> {
                 padding: EdgeInsets.all(AppConst.kPadding),
                 color: AppConst.kLight,
                 height: MediaQuery.of(context).size.height - 100,
-                child: ListView(children: [CustomTableBarChart()]),
+                child: ListView(
+                  children: [CustomTableBarChart(title: "Top SKUs Purchased")],
+                ),
               ),
             ),
           ],
