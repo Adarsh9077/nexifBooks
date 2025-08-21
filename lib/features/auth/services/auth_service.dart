@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,11 +59,26 @@ class AuthService {
         'accounts/companies/',
         queryParameters: {'owner': 1},
       );
-      print("Company data: ${response.data}");
+      // print("Company data: ${response.data}");
       return response.data;
     } catch (e) {
       print("Company error:- $e");
       return null;
+    }
+  }
+
+  static Future<List< dynamic>> getSalesInvoices() async {
+    try {
+      await setAuthHeader();
+      var companyId = await getCompanyDetails();
+      final response = await dio.get(
+        'invoices/sales/?company_id=${companyId!["results"][0]["id"]}&search=',
+      );
+      print(response.data["results"].runtimeType);
+      return response.data["results"];
+    } catch (e) {
+      print(e);
+      return [];
     }
   }
 }

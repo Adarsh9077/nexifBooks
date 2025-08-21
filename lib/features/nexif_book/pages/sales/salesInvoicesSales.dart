@@ -4,8 +4,10 @@ import 'package:nexifbook/common/utils/constants.dart';
 import 'package:nexifbook/common/widget/app_style.dart';
 import 'package:nexifbook/common/widget/custom_text_field.dart';
 import 'package:nexifbook/common/widget/height_spacer.dart';
-import 'package:nexifbook/common/widget/width_spacer.dart';
+import 'package:nexifbook/features/auth/services/auth_service.dart';
+import 'package:nexifbook/features/nexif_book/pages/sales/widgets/data_table_widget.dart';
 import 'package:nexifbook/features/nexif_book/widgets/app_bar.dart';
+import 'widgets/custom_tab_bar.dart';
 
 class SalesInvoicesSales extends ConsumerStatefulWidget {
   const SalesInvoicesSales({super.key});
@@ -14,12 +16,31 @@ class SalesInvoicesSales extends ConsumerStatefulWidget {
   ConsumerState<SalesInvoicesSales> createState() => _SalesInvoicesSalesState();
 }
 
-class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales> {
+class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales>
+    with TickerProviderStateMixin {
   TextEditingController searchController = TextEditingController();
+  late final TabController tabController = TabController(
+    length: 2,
+    vsync: this,
+  );
+void getSalesInvoiceData () async{
+  print("object - getSalesInvoiceData");
+  var data = await AuthService.getSalesInvoices();
+  // print(data);
+
+}
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("object");
+    getSalesInvoiceData();
+  }
 
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    getSalesInvoiceData();
     return Scaffold(
       appBar: CustomAppBar(title: "Sales Invoice", isHomePage: false),
       backgroundColor: AppConst.kLight,
@@ -39,29 +60,36 @@ class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales> {
               hintStyle: appStyle(20, FontWeight.w400, AppConst.kGreyLight),
             ),
             HeightSpacer(height: 12),
-            ToggleButtons(
-              constraints: BoxConstraints(
-                maxWidth: screenSize.width * 0.46,
-                minWidth: screenSize.width * 0.455,
-                minHeight: 46,
-                maxHeight: 50,
+            SizedBox(
+              height: 46,
+              child: CustomTabBar(tabController: tabController),
+            ),
+            HeightSpacer(height: 12),
+            Expanded(
+              child: SizedBox(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: TabBarView(
+                    controller: tabController,
+                    children: [
+                      Container(
+                        child: DataTableWidget(
+                          columnNames: [
+                            "S No.",
+                            "Id",
+                            "First Name",
+                            "Last Name",
+                            "Age",
+                            "DOB",
+                            "Role",
+                          ],
+                        ),
+                      ),
+                      Container(color: AppConst.kGreen,),
+                    ],
+                  ),
+                ),
               ),
-              borderRadius: BorderRadius.circular(8),
-              isSelected: [true, false],
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text("Invoices"),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text("Items"),
-                ),
-              ],
-              onPressed: (index) {
-                // switch tab
-                print(index);
-              },
             ),
           ],
         ),
