@@ -13,6 +13,7 @@ class CustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.prefixIcon,
     this.obscureText,
+    this.width,
   });
 
   final String? hintText;
@@ -23,11 +24,12 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final bool? obscureText;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: AppConst.kWidth * 0.9,
+      width: width ?? AppConst.kWidth * 0.9,
       decoration: BoxDecoration(
         color: AppConst.kLight,
         borderRadius: BorderRadius.circular(AppConst.kRadius),

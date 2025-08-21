@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nexifbook/common/utils/constants.dart';
 import 'package:nexifbook/common/widget/app_style.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../auth/pages/login_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key, required this.title, this.isHomePage = false});
@@ -11,6 +13,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    void logOut(BuildContext context) async {
+      final pref = await SharedPreferences.getInstance();
+      await pref.setBool("is_logged_in", false);
+      await pref.setString("access_key", "");
+      await pref.setString("refresh_token", "");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    }
+
     return AppBar(
       title: isHomePage
           ? Image.asset("assets/logo/nexif_logo.png", width: 55)
@@ -64,6 +77,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           onSelected: (value) {
             print(value);
+            if (value == 'Sign Out') {
+              logOut(context);
+            }
           },
           itemBuilder: (BuildContext context) {
             return [
@@ -80,41 +96,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ];
           },
         ),
-        // GestureDetector(
-        //   onTap: () {},
-        //   child: Container(
-        //     // width: 80,
-        //     padding: EdgeInsets.symmetric(horizontal: AppConst.kPadding),
-        //     decoration: BoxDecoration(
-        //       // borderRadius: BorderRadius.circular(AppConst.kRadius * 0.5),
-        //       // border: Border.all(width: .5, color: AppConst.kBlueLight),
-        //     ),
-        //     child: Row(
-        //       children: [
-        //         // Image.network(
-        //         //   "src",
-        //         //   width: 35,
-        //         //   height: 35,
-        //         //   fit: BoxFit.cover,
-        //         //   errorBuilder: (_, __, ___) => Placeholder(),
-        //         // ),
-        //         CircleAvatar(
-        //           radius: AppConst.kRadius * 1.625,
-        //           backgroundColor: AppConst.kBlueLight,
-        //
-        //           child: ReusableText(
-        //             text: "AK",
-        //             style: appStyle(
-        //               AppConst.kFontSize * 0.875,
-        //               FontWeight.w600,
-        //               AppConst.kLight,
-        //             ),
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
       ],
     );
   }
