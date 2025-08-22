@@ -45,7 +45,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   Future<void> fetchUserData() async {
     final user = await AuthService.getUserDetails();
     userData = user;
-    // return userData;
   }
 
   @override
@@ -60,51 +59,47 @@ class _HomePageState extends ConsumerState<HomePage> {
         child: _isLoading
             ? Center(child: CircularProgressIndicator())
             : Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                ReusableText(
-                  text: "Hi, ",
-                  style: appStyle(
-                    32,
-                    FontWeight.bold,
-                    AppConst.kBlueLight,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  ReusableText(
+                    text: "Hi, ",
+                    style: appStyle(32, FontWeight.bold, AppConst.kBlueLight),
                   ),
-                ),
-                HeightSpacer(height: 10),
-                FutureBuilder(
-                  future: fetchUserData(),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (!snapshot.hasData) {
-                      return ReusableText(
-                        text: "${userData!["full_name"]}",
-                        style: appStyle(
-                          32,
-                          FontWeight.bold,
-                          AppConst.kBlueLight,
-                        ),
-                      );
-                    }
-                    return Text("${userData!["id"]}");
-                  },
-                ),
-                // CustomOtlBtn(
-                //   width: AppConst.kWidth * 0.9,
-                //   height: 52,
-                //   color: AppConst.kBlueLight,
-                //   text: "Json Data",
-                //   iconData: false,
-                //   onTap: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) => JsonDisplayPage(),
-                //       ),
-                //     );
-                //   },
-                // ),
-              ],
-            ),
+                  HeightSpacer(height: 10),
+                  FutureBuilder(
+                    future: fetchUserData(),
+                    builder: (context, AsyncSnapshot snapshot) {
+                      if (!snapshot.hasData) {
+                        return ReusableText(
+                          text: "${userData!["full_name"]}",
+                          style: appStyle(
+                            32,
+                            FontWeight.bold,
+                            AppConst.kBlueLight,
+                          ),
+                        );
+                      }
+                      return Text("${userData!["id"]}");
+                    },
+                  ),
+                  // CustomOtlBtn(
+                  //   width: AppConst.kWidth * 0.9,
+                  //   height: 52,
+                  //   color: AppConst.kBlueLight,
+                  //   text: "Json Data",
+                  //   iconData: false,
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => JsonDisplayPage(),
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
+                ],
+              ),
       ),
     );
   }
