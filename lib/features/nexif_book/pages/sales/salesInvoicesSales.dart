@@ -5,6 +5,7 @@ import 'package:nexifbook/common/widget/app_style.dart';
 import 'package:nexifbook/common/widget/custom_text_field.dart';
 import 'package:nexifbook/common/widget/height_spacer.dart';
 import 'package:nexifbook/features/auth/services/auth_service.dart';
+import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invoice_modal.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/widgets/data_table_widget.dart';
 import 'package:nexifbook/features/nexif_book/widgets/app_bar.dart';
 import 'widgets/custom_tab_bar.dart';
@@ -23,13 +24,28 @@ class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales>
     length: 2,
     vsync: this,
   );
-void getSalesInvoiceData () async{
-  print("object - getSalesInvoiceData");
-  var data = await AuthService.getSalesInvoices();
-  // print(data);
 
-}
-@override
+
+  Future<List<SalesInvoicesModal>> getSalesInvoiceData() async {
+    List<SalesInvoicesModal> invoice = [];
+    print("object - getSalesInvoiceData");
+    var data = await AuthService.getSalesInvoices();
+    for (Map<String, dynamic> index in data) {
+      invoice.add(
+        SalesInvoicesModal(
+          invoiceId: index["id"],
+          invoiceNumber: index["number"].toString(),
+          invoiceDate: index["date"].toString(),
+          totalAmount: index["totalAmount"].toString(),
+          customer: index["customer"]["name"].toString(),
+        ),
+      );
+    }
+    print(invoice);
+    return invoice;
+  }
+
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -40,7 +56,7 @@ void getSalesInvoiceData () async{
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    getSalesInvoiceData();
+    // getSalesInvoiceData();
     return Scaffold(
       appBar: CustomAppBar(title: "Sales Invoice", isHomePage: false),
       backgroundColor: AppConst.kLight,
@@ -66,29 +82,36 @@ void getSalesInvoiceData () async{
             ),
             HeightSpacer(height: 12),
             Expanded(
-              child: SizedBox(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: TabBarView(
-                    controller: tabController,
-                    children: [
-                      Container(
-                        child: DataTableWidget(
-                          columnNames: [
-                            "S No.",
-                            "Id",
-                            "First Name",
-                            "Last Name",
-                            "Age",
-                            "DOB",
-                            "Role",
-                          ],
-                        ),
+              child: FutureBuilder(
+                future: getSalesInvoiceData(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  return SizedBox(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: TabBarView(
+                        controller: tabController,
+                        children: [
+                          Container(
+                            color: AppConst.kLight,
+                            child: DataTableWidget(
+                              columnNames: [
+                                "S No.",
+                                "Invoice Number",
+                                "Invoice Date",
+                                "Customer",
+                                "Total Amount",
+                                "Action",
+                                // "Role",
+                              ],
+                              dataRowList: snapshot.data,
+                            ),
+                          ),
+                          Container(color: AppConst.kGreen),
+                        ],
                       ),
-                      Container(color: AppConst.kGreen,),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
             ),
           ],
