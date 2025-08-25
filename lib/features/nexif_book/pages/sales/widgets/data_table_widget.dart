@@ -18,7 +18,6 @@ class DataTableWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      // controller: PageController(),
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: DataTable(

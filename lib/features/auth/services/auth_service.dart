@@ -74,7 +74,6 @@ class AuthService {
       final response = await dio.get(
         'invoices/sales/?company_id=${companyId!["results"][0]["id"]}&search=',
       );
-      // print(response.data["results"].runtimeType);
       return response.data["results"];
     } catch (e) {
       print(e);

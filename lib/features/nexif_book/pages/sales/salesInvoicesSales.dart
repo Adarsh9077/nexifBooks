@@ -25,7 +25,6 @@ class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales>
     vsync: this,
   );
 
-
   Future<List<SalesInvoicesModal>> getSalesInvoiceData() async {
     List<SalesInvoicesModal> invoice = [];
     print("object - getSalesInvoiceData");
@@ -41,7 +40,7 @@ class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales>
         ),
       );
     }
-    print(invoice);
+
     return invoice;
   }
 
@@ -54,9 +53,15 @@ class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales>
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    tabController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    // getSalesInvoiceData();
     return Scaffold(
       appBar: CustomAppBar(title: "Sales Invoice", isHomePage: false),
       backgroundColor: AppConst.kLight,
@@ -85,32 +90,36 @@ class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales>
               child: FutureBuilder(
                 future: getSalesInvoiceData(),
                 builder: (context, AsyncSnapshot snapshot) {
-                  return SizedBox(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: TabBarView(
-                        controller: tabController,
-                        children: [
-                          Container(
-                            color: AppConst.kLight,
-                            child: DataTableWidget(
-                              columnNames: [
-                                "S No.",
-                                "Invoice Number",
-                                "Invoice Date",
-                                "Customer",
-                                "Total Amount",
-                                "Action",
-                                // "Role",
-                              ],
-                              dataRowList: snapshot.data,
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    return SizedBox(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: TabBarView(
+                          controller: tabController,
+                          children: [
+                            Container(
+                              color: AppConst.kLight,
+                              child: DataTableWidget(
+                                columnNames: [
+                                  "S No.",
+                                  "Invoice Number",
+                                  "Invoice Date",
+                                  "Customer",
+                                  "Total Amount",
+                                  "Action",
+                                  // "Role",
+                                ],
+                                dataRowList: snapshot.data,
+                              ),
                             ),
-                          ),
-                          Container(color: AppConst.kGreen),
-                        ],
+                            Container(color: AppConst.kGreen),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
               ),
             ),
