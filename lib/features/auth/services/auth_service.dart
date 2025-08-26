@@ -67,12 +67,12 @@ class AuthService {
     }
   }
 
-  static Future<List< dynamic>> getSalesInvoices() async {
+  static Future<List< dynamic>> getSalesInvoices({String query = ""}) async {
     try {
       await setAuthHeader();
       var companyId = await getCompanyDetails();
       final response = await dio.get(
-        'invoices/sales/?company_id=${companyId!["results"][0]["id"]}&search=',
+        'invoices/sales/?company_id=${companyId!["results"][0]["id"]}&search=$query',
       );
       return response.data["results"];
     } catch (e) {
