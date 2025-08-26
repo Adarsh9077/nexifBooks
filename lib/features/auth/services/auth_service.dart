@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
+import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invoice_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
@@ -67,17 +66,26 @@ class AuthService {
     }
   }
 
-  static Future<List< dynamic>> getSalesInvoices({String query = ""}) async {
+  static Future<SalesInvoiceResponse> getSalesInvoices({
+    String query = "",
+    String? pageUrl,
+  }) async {
     try {
       await setAuthHeader();
       var companyId = await getCompanyDetails();
-      final response = await dio.get(
-        'invoices/sales/?company_id=${companyId!["results"][0]["id"]}&search=$query',
+      final String salesInvoiceUrl =
+          "invoices/sales/?company_id=${companyId!["results"][0]["id"]}&search=$query";
+
+      final response = await dio.get(pageUrl ?? salesInvoiceUrl);
+      print(
+        "${pageUrl.runtimeType} "
+        "\n${response.data.runtimeType} *****"
+        "\n${response.data}",
       );
-      return response.data["results"];
+      return SalesInvoiceResponse.fromJson(response.data);
     } catch (e) {
       print(e);
-      return [];
+      rethrow;
     }
   }
 }
