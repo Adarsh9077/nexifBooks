@@ -4,15 +4,22 @@ import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invo
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invoice_response.dart';
 
 // final salesInvoiceProvider =
-//     FutureProvider.family<List<SalesInvoicesModal>, String>((ref, query) async {
+//     FutureProvider.family<List<SalesInvoiceResponse>, String>((ref, query) async {
 //       final data = await AuthService.getSalesInvoices(query: query,);
-//       return data['results'].map<SalesInvoicesModal>((index) {
-//         return SalesInvoicesModal(
-//           invoiceId: index["id"],
-//           invoiceNumber: index["number"].toString(),
-//           invoiceDate: index["date"].toString(),
-//           totalAmount: index["totalAmount"].toString(),
-//           customer: index["customer"]["name"].toString(),
+//      for (SalesInvoicesModal index  in data.results){
+//        print(index.customer);
+//      }
+//       return data.map<SalesInvoiceResponse>((index) {
+//         return SalesInvoiceResponse(
+//           count: index["count"],
+//           next: index["next"],
+//           previous: index["previous"],
+//           results: index["results"]
+//           // invoiceId: index["id"],
+//           // invoiceNumber: index["number"].toString(),
+//           // invoiceDate: index["date"].toString(),
+//           // totalAmount: index["totalAmount"].toString(),
+//           // customer: index["customer"]["name"].toString(),
 //         );
 //       }).toList();
 //     });
@@ -20,36 +27,46 @@ import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invo
 
 final salesInvoiceProvider =
     StateNotifierProvider<
-      SalesInvoiceNotifier,
-      AsyncValue<SalesInvoiceResponse>
-    >((ref) => SalesInvoiceNotifier());
+      SalesInvoiceController,
+      AsyncValue<SalesInvoiceResponse?>
+    >((ref) => SalesInvoiceController(ref)..fetchInvoices());
 
-class SalesInvoiceNotifier
-    extends StateNotifier<AsyncValue<SalesInvoiceResponse>> {
-  SalesInvoiceNotifier() : super(const AsyncValue.loading());
+class SalesInvoiceController
+    extends StateNotifier<AsyncValue<SalesInvoiceResponse?>> {
+  SalesInvoiceController(this.ref) : super(const AsyncValue.loading());
 
-  String query = "";
-  String? currentPageUrl;
+  final Ref ref;
+  String searchQuery = "";
 
-  Future<void> fetchInvoices({String search = ""}) async {
+  Future<void> fetchInvoices({String? pageUrl}) async {
+    state = const AsyncValue.loading();
     try {
-      state = const AsyncValue.loading();
-      query = search;
-      currentPageUrl = null;
-      final response = await AuthService.getSalesInvoices(query: search);
-      state = AsyncValue.data(response);
+      final data = await AuthService.getSalesInvoices(
+        query: searchQuery,
+        pageUrl: pageUrl,
+      );
+      state = AsyncValue.data(data);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }
   }
 
-  Future<void> goToPage(String? pageUrl) async {
-    if (pageUrl == null) return;
-    try {
-      state = const AsyncValue.loading();
-      currentPageUrl = pageUrl;
-      final response = await AuthService.getSalesInvoices(pageUrl: pageUrl);
-      state = AsyncValue.data(response);
-    } catch (e, st) {}
+  void updateSearch(String query) {
+    searchQuery = query;
+    fetchInvoices();
+  }
+
+  void goNext() {
+    final current = state.value;
+    if (current != null && current.next != null) {
+      fetchInvoices(pageUrl: current.next);
+    }
+  }
+
+  void goPrevious() {
+    final current = state.value;
+    if (current != null && current.previous != null) {
+      fetchInvoices(pageUrl: current.previous);
+    }
   }
 }

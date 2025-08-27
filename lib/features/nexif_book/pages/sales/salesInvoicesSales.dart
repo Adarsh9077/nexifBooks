@@ -63,11 +63,22 @@ class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales>
               suffixIcon: IconButton(
                 onPressed: () {
                   searchQuery = searchController.text.toString();
-                  ref.read(salesInvoiceProvider.notifier).currentPageUrl;
+                  ref
+                      .read(salesInvoiceProvider.notifier)
+                      .updateSearch(searchQuery);
                   FocusScope.of(context).unfocus();
                 },
                 icon: Icon(Icons.search, size: 32, color: AppConst.kBlueLight),
               ),
+              onChanged: (value) {
+                if (value.isEmpty) {
+                  searchQuery = value;
+                  ref
+                      .read(salesInvoiceProvider.notifier)
+                      .updateSearch(searchQuery);
+                  FocusScope.of(context).unfocus();
+                }
+              },
             ),
             HeightSpacer(height: 12),
             SizedBox(

@@ -13,7 +13,9 @@ class InvoiceTabView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print("object");
     final invoicesAsync = ref.watch(salesInvoiceProvider);
+    print(invoicesAsync);
     return invoicesAsync.when(
       // skipLoadingOnRefresh: false,
       data: (invoice) {
@@ -28,7 +30,7 @@ class InvoiceTabView extends ConsumerWidget {
               "Total Amount",
               "Action",
             ],
-            dataRowList: invoice.results,
+            dataRowList: invoice?.results ?? [],
           ),
         );
       },

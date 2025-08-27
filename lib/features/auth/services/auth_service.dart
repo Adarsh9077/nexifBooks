@@ -73,18 +73,15 @@ class AuthService {
     try {
       await setAuthHeader();
       var companyId = await getCompanyDetails();
+
       final String salesInvoiceUrl =
-          "invoices/sales/?company_id=${companyId!["results"][0]["id"]}&search=$query";
+          "https://krgb6fwb7h.execute-api.ap-south-1.amazonaws.com/dev/api/invoices/sales/?company_id=${companyId!["results"][0]["id"]}&search=$query";
 
       final response = await dio.get(pageUrl ?? salesInvoiceUrl);
-      print(
-        "${pageUrl.runtimeType} "
-        "\n${response.data.runtimeType} *****"
-        "\n${response.data}",
-      );
+
       return SalesInvoiceResponse.fromJson(response.data);
     } catch (e) {
-      print(e);
+      print("Invoice fetch error: $e");
       rethrow;
     }
   }
