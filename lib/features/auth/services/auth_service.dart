@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invoice_response.dart';
+import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_item_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
@@ -34,7 +35,6 @@ class AuthService {
       await prefs.setBool("is_logged_in", true);
       return true;
     } catch (e) {
-      print("Login error: $e");
       return false;
     }
   }
@@ -43,10 +43,8 @@ class AuthService {
     try {
       await setAuthHeader();
       final response = await dio.get("auth/users/me/");
-      print("User data:- \n${response.data}");
       return response.data;
     } catch (e) {
-      print("User error:- $e");
       return null;
     }
   }
@@ -58,10 +56,8 @@ class AuthService {
         'accounts/companies/',
         queryParameters: {'owner': 1},
       );
-      // print("Company data: ${response.data}");
       return response.data;
     } catch (e) {
-      print("Company error:- $e");
       return null;
     }
   }
@@ -69,19 +65,47 @@ class AuthService {
   static Future<SalesInvoiceResponse> getSalesInvoices({
     String query = "",
     String? pageUrl,
+    String? pageNo,
   }) async {
     try {
       await setAuthHeader();
       var companyId = await getCompanyDetails();
+      String goToPage =
+          "https://krgb6fwb7h.execute-api.ap-south-1.amazonaws.com/dev/api/invoices/sales/?page=$pageNo&company_id=${companyId!["results"][0]["id"]}&search=$query";
 
       final String salesInvoiceUrl =
-          "https://krgb6fwb7h.execute-api.ap-south-1.amazonaws.com/dev/api/invoices/sales/?company_id=${companyId!["results"][0]["id"]}&search=$query";
+          "https://krgb6fwb7h.execute-api.ap-south-1.amazonaws.com/dev/api/invoices/sales/?company_id=${companyId["results"][0]["id"]}&search=$query";
 
-      final response = await dio.get(pageUrl ?? salesInvoiceUrl);
+      final response = await dio.get(
+        pageNo == null ? salesInvoiceUrl : goToPage,
+      );
 
       return SalesInvoiceResponse.fromJson(response.data);
     } catch (e) {
-      print("Invoice fetch error: $e");
+      rethrow;
+    }
+  }
+
+  static Future<SalesItemResponse> getSalesItems({
+    String query = "",
+    String? pageUrl,
+    String? pageNo,
+  }) async {
+    try {
+      await setAuthHeader();
+      var companyId = await getCompanyDetails();
+      String goToPage =
+          "https://krgb6fwb7h.execute-api.ap-south-1.amazonaws.com/dev/api/invoices/sales-skus/?page=$pageNo&company_id=${companyId!["results"][0]["id"]}&search=$query";
+
+      final String salesInvoiceUrl =
+          "https://krgb6fwb7h.execute-api.ap-south-1.amazonaws.com/dev/api/invoices/sales-skus/?company_id=${companyId["results"][0]["id"]}&search=$query";
+
+      final response = await dio.get(
+        pageNo == null ? salesInvoiceUrl : goToPage,
+      );
+
+      return SalesItemResponse.fromJson(response.data);
+    } catch (e) {
       rethrow;
     }
   }

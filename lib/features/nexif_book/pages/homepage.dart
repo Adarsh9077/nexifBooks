@@ -36,7 +36,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   void _startLoadingTimer() async {
     fetchUserData();
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 4));
     setState(() {
       _isLoading = false;
     });

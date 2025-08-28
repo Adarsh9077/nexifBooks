@@ -1,14 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nexifbook/features/auth/services/auth_service.dart';
-import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invoice_response.dart';
+import '../sales_modal/sales_item_response.dart';
 
-final salesInvoiceProvider =
-StateNotifierProvider<SalesInvoiceController, AsyncValue<SalesInvoiceResponse?>>(
-      (ref) => SalesInvoiceController(ref)..fetchInvoices(),
+final salesItemsProvider =
+StateNotifierProvider<SalesItemsController, AsyncValue<SalesItemResponse?>>(
+      (ref) => SalesItemsController(ref)..fetchInvoices(),
 );
 
-class SalesInvoiceController extends StateNotifier<AsyncValue<SalesInvoiceResponse?>> {
-  SalesInvoiceController(this.ref) : super(const AsyncValue.loading());
+class SalesItemsController extends StateNotifier<AsyncValue<SalesItemResponse?>> {
+  SalesItemsController(this.ref) : super(const AsyncValue.loading());
 
   final Ref ref;
   String searchQuery = "";
@@ -17,7 +17,7 @@ class SalesInvoiceController extends StateNotifier<AsyncValue<SalesInvoiceRespon
   Future<void> fetchInvoices({String? pageUrl, String? pageNo}) async {
     state = const AsyncValue.loading();
     try {
-      final data = await AuthService.getSalesInvoices(
+      final data = await AuthService.getSalesItems(
         query: searchQuery,
         pageUrl: pageUrl,
         pageNo: pageNo ?? "$currentPage", // NEW: use current page
@@ -37,14 +37,14 @@ class SalesInvoiceController extends StateNotifier<AsyncValue<SalesInvoiceRespon
   void goNext() {
     final current = state.value;
     if (current != null && current.next != null) {
-      currentPage++; // NEW: increment page counter
+      currentPage++;
       fetchInvoices(pageNo: "$currentPage");
     }
   }
 
   void goPrevious() {
     if (currentPage > 1) {
-      currentPage--; // NEW: decrement page counter
+      currentPage--;
       fetchInvoices(pageNo: "$currentPage");
     }
   }

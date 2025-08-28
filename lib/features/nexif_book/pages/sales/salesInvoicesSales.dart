@@ -6,6 +6,7 @@ import 'package:nexifbook/common/widget/custom_text_field.dart';
 import 'package:nexifbook/common/widget/height_spacer.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_provider/sales_invoice_provider.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/widgets/invoice_tab_view.dart';
+import 'package:nexifbook/features/nexif_book/pages/sales/widgets/items_tab_view.dart';
 import 'package:nexifbook/features/nexif_book/widgets/app_bar.dart';
 import 'widgets/custom_tab_bar.dart';
 
@@ -94,7 +95,7 @@ class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales>
                     controller: tabController,
                     children: [
                       InvoiceTabView(query: searchQuery),
-                      Container(color: AppConst.kGreen),
+                      ItemsTabView(query: searchQuery),
                     ],
                   ),
                 ),

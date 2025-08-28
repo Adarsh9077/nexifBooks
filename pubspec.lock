@@ -89,6 +89,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  dartz:
+    dependency: transitive
+    description:
+      name: dartz
+      sha256: e6acf34ad2e31b1eb00948692468c30ab48ac8250e0f0df661e29f12dd252168
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.1"
+  data_table_2:
+    dependency: "direct main"
+    description:
+      name: data_table_2
+      sha256: b8dd157e4efe5f2beef092c9952a254b2192cf76a26ad1c6aa8b06c8b9d665da
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.0"
   dio:
     dependency: "direct main"
     description:
@@ -272,6 +288,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.16.0"
+  number_paginator:
+    dependency: "direct main"
+    description:
+      name: number_paginator
+      sha256: "4651a18a33f11497a49f2637cb008ba8ebccd318eab1bf3bbcd159fc7b6fa6a5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
+  paginator:
+    dependency: "direct main"
+    description:
+      name: paginator
+      sha256: "467111bfacbdfb139ac372ec3d96cabf75ead0813ac46650653dd7d96b34bce2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   path:
     dependency: transitive
     description:
