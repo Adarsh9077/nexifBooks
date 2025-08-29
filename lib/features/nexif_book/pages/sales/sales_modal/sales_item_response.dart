@@ -20,7 +20,7 @@ class SalesItemResponse {
       previous: json['previous'],
       results: (json['results'] as List<dynamic>)
           .map<SalesItemModal>((item) {
-            print("${item}  00000");
+            print("${item["sku"]["name"]} \n00000");
         return SalesItemModal(
           invoiceId: item["sku_id"],
           itemName: item["sku"]?["name"] ?? "",
