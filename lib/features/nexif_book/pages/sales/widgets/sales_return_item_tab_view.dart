@@ -3,22 +3,20 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nexifbook/common/utils/constants.dart';
 import 'package:nexifbook/common/widget/app_style.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
-import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invoice_modal.dart';
-import 'package:nexifbook/features/nexif_book/pages/sales/sales_provider/sales_invoice_provider.dart';
 import 'package:number_paginator/number_paginator.dart';
+import '../sales_modal/sales_item_modal.dart';
+import '../sales_provider/sales_return_item_provider.dart';
 import 'data_table_widget.dart';
 
-class InvoiceTabView extends ConsumerWidget {
-  const InvoiceTabView({super.key, required this.query});
+class SalesReturnItemTabView extends ConsumerWidget {
+  const SalesReturnItemTabView({super.key, required this.query});
 
   final String query;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final invoicesAsync = ref.watch(salesInvoiceProvider);
-    final controller = ref.read(
-      salesInvoiceProvider.notifier,
-    );
+    final invoicesAsync = ref.watch(salesReturnItemsProvider);
+    final controller = ref.read(salesReturnItemsProvider.notifier);
     final currentPage = controller.currentPage;
 
     return invoicesAsync.when(
@@ -30,22 +28,35 @@ class InvoiceTabView extends ConsumerWidget {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              DataTableWidget<SalesInvoicesModal>(
-                minWidthTable: 780,
+              DataTableWidget<SalesItemModal>(
+                minWidthTable: 1800,
                 columnNames: const [
                   "S No.",
+                  "Items",
                   "Invoice Number",
                   "Invoice Date",
                   "Customer",
-                  "Total Amount",
+                  "Batch",
+                  "MRP",
+                  "Qty",
+                  "Discount",
+                  "Total Before Tax",
+                  "GST",
+                  "Total after Tax",
                   "Action",
                 ],
-                dataRowList: invoice!.results,
+                dataRowList: invoice?.results ?? [],
                 rowBuilder: (item, index) {
                   return [
                     DataCell(
                       ReusableText(
                         text: "${index + 1}",
+                        style: appStyle(14, FontWeight.w400, AppConst.kBlack),
+                      ),
+                    ),
+                    DataCell(
+                      ReusableText(
+                        text: '${item.itemName}',
                         style: appStyle(14, FontWeight.w400, AppConst.kBlack),
                       ),
                     ),
@@ -69,7 +80,43 @@ class InvoiceTabView extends ConsumerWidget {
                     ),
                     DataCell(
                       ReusableText(
-                        text: '${item.totalAmount}',
+                        text: '${item.batch}',
+                        style: appStyle(14, FontWeight.w400, AppConst.kBlack),
+                      ),
+                    ),
+                    DataCell(
+                      ReusableText(
+                        text: '${item.mrp}',
+                        style: appStyle(14, FontWeight.w400, AppConst.kBlack),
+                      ),
+                    ),
+                    DataCell(
+                      ReusableText(
+                        text: '${item.quantity}',
+                        style: appStyle(14, FontWeight.w400, AppConst.kBlack),
+                      ),
+                    ),
+                    DataCell(
+                      ReusableText(
+                        text: '${item.discount}',
+                        style: appStyle(14, FontWeight.w400, AppConst.kBlack),
+                      ),
+                    ),
+                    DataCell(
+                      ReusableText(
+                        text: '${item.totalBeforeTax}',
+                        style: appStyle(14, FontWeight.w400, AppConst.kBlack),
+                      ),
+                    ),
+                    DataCell(
+                      ReusableText(
+                        text: '${item.gst}',
+                        style: appStyle(14, FontWeight.w400, AppConst.kBlack),
+                      ),
+                    ),
+                    DataCell(
+                      ReusableText(
+                        text: item.totalAfterTax!.toStringAsFixed(2),
                         style: appStyle(14, FontWeight.w400, AppConst.kBlack),
                       ),
                     ),

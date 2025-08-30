@@ -5,6 +5,7 @@ import 'package:nexifbook/common/widget/app_style.dart';
 import 'package:nexifbook/common/widget/custom_text_field.dart';
 import 'package:nexifbook/common/widget/height_spacer.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_provider/sales_invoice_provider.dart';
+import 'package:nexifbook/features/nexif_book/pages/sales/sales_provider/sales_items_provider.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/widgets/invoice_tab_view.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/widgets/items_tab_view.dart';
 import 'package:nexifbook/features/nexif_book/widgets/app_bar.dart';
@@ -27,15 +28,23 @@ class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(salesInvoiceProvider.notifier).updateSearch('');
+      ref.read(salesItemsProvider.notifier).updateSearch('');
+    });
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
+    ref.read(salesInvoiceProvider.notifier).updateSearch("");
+    ref.read(salesItemsProvider.notifier).updateSearch("");
     tabController.dispose();
+    searchController.dispose();
+    ref.read(salesInvoiceProvider.notifier).dispose();
+    ref.read(salesItemsProvider.notifier).dispose();
+    super.dispose();
   }
 
   String searchQuery = '';
@@ -67,6 +76,9 @@ class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales>
                   ref
                       .read(salesInvoiceProvider.notifier)
                       .updateSearch(searchQuery);
+                  ref
+                      .read(salesItemsProvider.notifier)
+                      .updateSearch(searchQuery);
                   FocusScope.of(context).unfocus();
                 },
                 icon: Icon(Icons.search, size: 32, color: AppConst.kBlueLight),
@@ -76,6 +88,9 @@ class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales>
                   searchQuery = value;
                   ref
                       .read(salesInvoiceProvider.notifier)
+                      .updateSearch(searchQuery);
+                  ref
+                      .read(salesItemsProvider.notifier)
                       .updateSearch(searchQuery);
                   FocusScope.of(context).unfocus();
                 }

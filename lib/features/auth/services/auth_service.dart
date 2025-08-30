@@ -109,4 +109,52 @@ class AuthService {
       rethrow;
     }
   }
+
+  static Future<SalesInvoiceResponse> getSalesReturnInvoice({
+    String query = "",
+    String? pageUrl,
+    String? pageNo,
+  }) async {
+    try {
+      await setAuthHeader();
+      var companyId = await getCompanyDetails();
+      String goToPage =
+          "https://krgb6fwb7h.execute-api.ap-south-1.amazonaws.com/dev/api/invoices/return-sales/?page=$pageNo&company_id=${companyId!["results"][0]["id"]}&search=$query";
+
+      final String salesInvoiceUrl =
+          "https://krgb6fwb7h.execute-api.ap-south-1.amazonaws.com/dev/api/invoices/return-sales/?company_id=${companyId["results"][0]["id"]}&search=$query";
+
+      final response = await dio.get(
+        pageNo == null ? salesInvoiceUrl : goToPage,
+      );
+
+      return SalesInvoiceResponse.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<SalesItemResponse> getSalesReturnItems({
+    String query = "",
+    String? pageUrl,
+    String? pageNo,
+  }) async {
+    try {
+      await setAuthHeader();
+      var companyId = await getCompanyDetails();
+      String goToPage =
+          "https://krgb6fwb7h.execute-api.ap-south-1.amazonaws.com/dev/api/invoices/return-sales-skus/?page=$pageNo&company_id=${companyId!["results"][0]["id"]}&search=$query";
+
+      final String salesInvoiceUrl =
+          "https://krgb6fwb7h.execute-api.ap-south-1.amazonaws.com/dev/api/invoices/return-sales-skus/?company_id=${companyId["results"][0]["id"]}&search=$query";
+
+      final response = await dio.get(
+        pageNo == null ? salesInvoiceUrl : goToPage,
+      );
+
+      return SalesItemResponse.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

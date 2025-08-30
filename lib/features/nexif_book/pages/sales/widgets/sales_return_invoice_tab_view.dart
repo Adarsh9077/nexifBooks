@@ -4,21 +4,19 @@ import 'package:nexifbook/common/utils/constants.dart';
 import 'package:nexifbook/common/widget/app_style.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invoice_modal.dart';
-import 'package:nexifbook/features/nexif_book/pages/sales/sales_provider/sales_invoice_provider.dart';
+import 'package:nexifbook/features/nexif_book/pages/sales/sales_provider/sales_return_invoice_provider.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'data_table_widget.dart';
 
-class InvoiceTabView extends ConsumerWidget {
-  const InvoiceTabView({super.key, required this.query});
+class SalesReturnInvoiceTabView extends ConsumerWidget {
+  const SalesReturnInvoiceTabView({super.key, required this.query});
 
   final String query;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final invoicesAsync = ref.watch(salesInvoiceProvider);
-    final controller = ref.read(
-      salesInvoiceProvider.notifier,
-    );
+    final invoicesAsync = ref.watch(salesReturnInvoiceProvider);
+    final controller = ref.read(salesReturnInvoiceProvider.notifier);
     final currentPage = controller.currentPage;
 
     return invoicesAsync.when(
@@ -31,7 +29,7 @@ class InvoiceTabView extends ConsumerWidget {
           child: Column(
             children: [
               DataTableWidget<SalesInvoicesModal>(
-                minWidthTable: 780,
+                minWidthTable: 700,
                 columnNames: const [
                   "S No.",
                   "Invoice Number",
@@ -81,24 +79,8 @@ class InvoiceTabView extends ConsumerWidget {
                             IconButton(
                               onPressed: () {},
                               icon: Icon(
-                                Icons.arrow_back,
-                                color: AppConst.kBlueLight,
-                                size: 24,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(
                                 Icons.print,
                                 color: AppConst.kBlueLight,
-                                size: 24,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.delete_forever,
-                                color: AppConst.kRed,
                                 size: 24,
                               ),
                             ),

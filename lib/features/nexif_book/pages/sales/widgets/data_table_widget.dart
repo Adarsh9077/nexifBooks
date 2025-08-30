@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-
-// import 'package:nexifbook/common/utils/constants.dart';
-// import 'package:nexifbook/common/widget/app_style.dart';
-// import 'package:nexifbook/common/widget/reusable_text.dart';
-// import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invoice_modal.dart';
 import 'package:data_table_2/data_table_2.dart';
 
 class DataTableWidget<T> extends StatelessWidget {

@@ -28,7 +28,6 @@ class ItemsTabView extends ConsumerWidget {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              // Expanded(
               DataTableWidget<SalesItemModal>(
                 minWidthTable: 1800,
                 columnNames: const [
@@ -117,7 +116,7 @@ class ItemsTabView extends ConsumerWidget {
                     ),
                     DataCell(
                       ReusableText(
-                        text: '${item.totalAfterTax}',
+                        text: item.totalAfterTax!.toStringAsFixed(2),
                         style: appStyle(14, FontWeight.w400, AppConst.kBlack),
                       ),
                     ),
