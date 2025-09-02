@@ -183,7 +183,12 @@ class SalesReturnItemTabView extends ConsumerWidget {
           ),
         );
       },
-      error: (err, _) => Text("Error: $err"),
+      error: (err, _) => Center(
+        child: Text(
+          "No Data Found",
+          style: appStyle(24, FontWeight.normal, AppConst.kGreyLight),
+        ),
+      ),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
   }

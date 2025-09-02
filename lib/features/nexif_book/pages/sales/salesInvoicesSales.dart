@@ -4,6 +4,7 @@ import 'package:nexifbook/common/utils/constants.dart';
 import 'package:nexifbook/common/widget/app_style.dart';
 import 'package:nexifbook/common/widget/custom_text_field.dart';
 import 'package:nexifbook/common/widget/height_spacer.dart';
+import 'package:nexifbook/features/nexif_book/pages/sales/add_new_invoice.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_provider/sales_invoice_provider.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_provider/sales_items_provider.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/widgets/invoice_tab_view.dart';
@@ -58,7 +59,12 @@ class _SalesInvoicesSalesState extends ConsumerState<SalesInvoicesSales>
       backgroundColor: AppConst.kLight,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0XFF4096FF),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddNewInvoice()),
+          );
+        },
         child: Icon(Icons.add, color: AppConst.kLight, size: 30),
       ),
       body: Container(
