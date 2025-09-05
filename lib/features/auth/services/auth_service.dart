@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invoice_response.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_item_response.dart';
@@ -153,6 +154,21 @@ class AuthService {
       );
 
       return SalesItemResponse.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<Map<String,dynamic>> getSalesNewInvoiceId() async {
+    try {
+      await setAuthHeader();
+      var companyId = await getCompanyDetails();
+      final response = await dio.get(
+        "invoices/preview/?company_id=${companyId!["results"][0]["id"]}&invoice_type=sales",
+      );
+      // var data = jsonDecode(response.data);
+      // print(jsonDecode(data)["next"]);
+      return response.data;
     } catch (e) {
       rethrow;
     }

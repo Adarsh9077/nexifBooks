@@ -45,7 +45,8 @@ dependencies:
   data_table_2: ^2.6.0
   paginator: ^0.0.1
   number_paginator: ^1.1.1
-  date_time_picker: ^2.1.0
+  flutter_datetime_picker_plus: ^2.2.0
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

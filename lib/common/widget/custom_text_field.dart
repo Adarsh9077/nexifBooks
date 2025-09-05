@@ -14,6 +14,8 @@ class CustomTextField extends StatelessWidget {
     this.prefixIcon,
     this.obscureText,
     this.width,
+    this.labelText,
+    this.enabled,
   });
 
   final String? hintText;
@@ -24,7 +26,9 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final bool? obscureText;
+  final bool? enabled;
   final double? width;
+  final String? labelText;
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +48,11 @@ class CustomTextField extends StatelessWidget {
         decoration: InputDecoration(
           hintStyle: hintStyle,
           hintText: hintText,
+          labelText: labelText,
           suffixIconColor: AppConst.kBKDark,
           suffixIcon: suffixIcon,
           prefixIcon: prefixIcon,
+          enabled: enabled ?? true,
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppConst.kRadius),
             borderSide: BorderSide(width: .5, color: AppConst.kRed),
