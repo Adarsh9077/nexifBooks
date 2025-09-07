@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invoice_response.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_item_response.dart';
@@ -159,16 +158,32 @@ class AuthService {
     }
   }
 
-  static Future<Map<String,dynamic>> getSalesNewInvoiceId() async {
+  static Future<Map<String, dynamic>> getSalesNewInvoiceId() async {
     try {
       await setAuthHeader();
       var companyId = await getCompanyDetails();
       final response = await dio.get(
         "invoices/preview/?company_id=${companyId!["results"][0]["id"]}&invoice_type=sales",
       );
-      // var data = jsonDecode(response.data);
-      // print(jsonDecode(data)["next"]);
       return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<Map<String, dynamic>> getInvoiceBillTo() async {
+    try {
+      await setAuthHeader();
+      var companyId = await getCompanyDetails();
+      final response = await dio.get(
+        "masters/customers/?search=&company_id=${companyId!["results"][0]["id"]}&page=1",
+      );
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        throw "Something Went Wrong";
+      }
+
     } catch (e) {
       rethrow;
     }

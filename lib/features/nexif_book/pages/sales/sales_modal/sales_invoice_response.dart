@@ -9,8 +9,8 @@ class SalesInvoiceResponse {
   });
 
   final int count;
-  final String? next; // <-- nullable
-  final String? previous; // <-- nullable
+  final String? next;
+  final String? previous;
   final List<SalesInvoicesModal> results;
 
   factory SalesInvoiceResponse.fromJson(Map<String, dynamic> json) {

@@ -3,12 +3,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nexifbook/common/widget/height_spacer.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
 import 'package:nexifbook/features/auth/services/auth_service.dart';
-import 'package:nexifbook/features/nexif_book/pages/sales/sales_provider/add_new_sales_invoice_provider.dart';
 import 'package:nexifbook/features/nexif_book/widgets/app_bar.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../common/utils/constants.dart';
 import '../../../../common/widget/app_style.dart';
+import 'sales_provider/add_new_sales_invoice_provider.dart';
 
 class AddNewInvoice extends ConsumerStatefulWidget {
   const AddNewInvoice({super.key});
@@ -31,7 +31,7 @@ class _AddNewInvoiceState extends ConsumerState<AddNewInvoice> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     print("object Build method");
-
+    // final invoiceBillToList = ref.watch(invoiceBillToProvider);
     return Scaffold(
       appBar: CustomAppBar(title: "Add New Sales Invoice", isHomePage: false),
       backgroundColor: AppConst.kLight,
@@ -145,6 +145,62 @@ class _AddNewInvoiceState extends ConsumerState<AddNewInvoice> {
                   );
                 },
               ),
+            ),
+            HeightSpacer(height: 16),
+            ReusableText(
+              text: " Bill To",
+              style: appStyle(18, FontWeight.w400, AppConst.kGreyLight),
+            ),
+            HeightSpacer(height: 5),
+            Consumer(
+              builder: (context, ref, child) {
+                final invoiceBillToList = ref.watch(invoiceBillToProvider);
+                print("object Build Consumer Bill to");
+                final String selectedValue = "Select Bill To";
+                return invoiceBillToList.when(
+                  data: (data) => Container(
+                    width: size.width,
+                    height: 48,
+                    padding: EdgeInsets.only(
+                      left: 16,
+                      right: 12,
+                      top: 8,
+                      bottom: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppConst.kBlueLight, width: .5),
+                    ),
+                    child: DropdownButton(
+                      isExpanded: true,
+                      value: selectedValue,
+                      underline: SizedBox(height: 0),
+                      items: [
+                        const DropdownMenuItem<String>(
+                          value: "Select Bill To",
+                          child: Text("Select Bill To"),
+                        ),
+                        ...data.map((e) {
+                          return DropdownMenuItem<String>(
+                            value: e.name,
+                            child: Text(e.name!),
+                          );
+                        }).toList(),
+                      ],
+                      onChanged: (value) {
+                        selectedValue == value;
+                        print(value);
+                        // ref.read(invoiceBillToProvider.notifier).state = value;
+                      },
+                    ),
+                  ),
+                  error: (error, stackTrace) => ReusableText(
+                    text: "Error : $error",
+                    style: appStyle(26, FontWeight.normal, AppConst.kRed),
+                  ),
+                  loading: () => CircularProgressIndicator(),
+                );
+              },
             ),
           ],
         ),
