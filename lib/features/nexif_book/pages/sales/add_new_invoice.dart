@@ -155,8 +155,9 @@ class _AddNewInvoiceState extends ConsumerState<AddNewInvoice> {
             Consumer(
               builder: (context, ref, child) {
                 final invoiceBillToList = ref.watch(invoiceBillToProvider);
+                final selectedValue = ref.watch(selectedBillToProvider);
+                // final selectedBillToId = ref.watch(selectedBillToProvider);
                 print("object Build Consumer Bill to");
-                final String selectedValue = "Select Bill To";
                 return invoiceBillToList.when(
                   data: (data) => Container(
                     width: size.width,
@@ -181,23 +182,59 @@ class _AddNewInvoiceState extends ConsumerState<AddNewInvoice> {
                           child: Text("Select Bill To"),
                         ),
                         ...data.map((e) {
+                          String name = e.name!;
+                          String address = e.address!.isEmpty
+                              ? ""
+                              : "${e.address}, ";
+                          String city = e.city!.isEmpty ? "" : "${e.city}, ";
+                          String state = e.state!.isEmpty ? "" : "${e.state}, ";
+                          String country = e.country!;
                           return DropdownMenuItem<String>(
-                            value: e.name,
-                            child: Text(e.name!),
+                            value: e.id.toString(),
+                            child: Text(
+                              "$name - $address $city $state $country",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           );
-                        }).toList(),
+                        }),
                       ],
                       onChanged: (value) {
-                        selectedValue == value;
                         print(value);
-                        // ref.read(invoiceBillToProvider.notifier).state = value;
+                        ref.read(selectedBillToProvider.notifier).state =
+                            value!;
+                        // ref.read(billToDetailsProvider).fetch(value);
                       },
                     ),
                   ),
-                  error: (error, stackTrace) => ReusableText(
-                    text: "Error : $error",
-                    style: appStyle(26, FontWeight.normal, AppConst.kRed),
-                  ),
+                  error: (error, stackTrace) {
+                    return ReusableText(
+                      text: "Error : $error",
+                      style: appStyle(26, FontWeight.normal, AppConst.kRed),
+                    );
+                  },
+                  loading: () => CircularProgressIndicator(),
+                );
+              },
+            ),
+            // HeightSpacer(height: 16),
+            Consumer(
+              builder: (context, ref, child) {
+                final selectedBillToId = ref.watch(selectedBillToProvider);
+                final billToDetails = ref.watch(
+                  billToDetailsProvider(selectedBillToId),
+                );
+
+                if (selectedBillToId == "Select Bill To") {
+                  return SizedBox();
+                }
+                return billToDetails.when(
+                  data: (data) {
+                    return Text("$data");
+                  },
+                  error: (error, st) {
+                    return Text("error");
+                  },
                   loading: () => CircularProgressIndicator(),
                 );
               },

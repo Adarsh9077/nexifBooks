@@ -17,3 +17,15 @@ final invoiceBillToProvider = FutureProvider<List<InvoiceBillToModal>>((
     rethrow;
   }
 });
+
+final selectedBillToProvider = StateProvider<String>((ref) {
+  return "Select Bill To";
+});
+
+final billToDetailsProvider =
+    FutureProvider.family<Map<String, dynamic>, String>((ref, billToId) async {
+      if (billToId == "Select Bill To") {
+        return {};
+      }
+      return await AuthService.getBillToDetails(billToId);
+    });

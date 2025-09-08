@@ -183,7 +183,33 @@ class AuthService {
       } else {
         throw "Something Went Wrong";
       }
+    } catch (e) {
+      rethrow;
+    }
+  }
 
+  static Future<Map<String, dynamic>> getBillToDetails(String billToId) async {
+    try {
+      await setAuthHeader();
+      var companyId = await getCompanyDetails();
+      final response = await dio.get(
+        "masters/customers/$billToId/?company_id=${companyId!["results"][0]["id"]}",
+        //   "masters/customers/52/?company_id=1"
+      );
+      final responseBookkeeping = await dio.get(
+        "bookkeeping/ledger/outstanding/?customer_id=$billToId",
+      );
+      if (response.statusCode == 200 && responseBookkeeping.statusCode == 200) {
+        print(response.data);
+        print("\nobject \n");
+        print(responseBookkeeping.data);
+        return {
+          "customerDetail": response.data,
+          "bookkeeping": responseBookkeeping.data,
+        };
+      } else {
+        throw "Something Went Wrong";
+      }
     } catch (e) {
       rethrow;
     }
