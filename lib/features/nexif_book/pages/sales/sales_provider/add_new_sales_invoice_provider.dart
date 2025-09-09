@@ -6,24 +6,19 @@ final invoiceDateProvider = StateProvider<String>((ref) {
   return DateTime.now().toString().substring(0, 10);
 });
 
-final invoiceBillToProvider = FutureProvider<List<InvoiceBillToModal>>((
-  ref,
-) async {
-  try {
-    final response = await AuthService.getInvoiceBillTo();
-    final List<dynamic> data = response["results"];
-    return data.map((item) => InvoiceBillToModal.fromJson(item)).toList();
-  } catch (e) {
-    rethrow;
-  }
-});
+final invoiceBillToProvider =
+    FutureProvider.autoDispose<List<InvoiceBillToModal>>((ref) async {
+      final response = await AuthService.getInvoiceBillTo();
+      final List<dynamic> data = response["results"];
+      return data.map((item) => InvoiceBillToModal.fromJson(item)).toList();
+    });
 
-final selectedBillToProvider = StateProvider<String>((ref) {
+final selectedBillToProvider = StateProvider.autoDispose<String>((ref) {
   return "Select Bill To";
 });
 
-final billToDetailsProvider =
-    FutureProvider.family<Map<String, dynamic>, String>((ref, billToId) async {
+final billToDetailsProvider = FutureProvider.family
+    .autoDispose<Map<String, dynamic>, String>((ref, billToId) async {
       if (billToId == "Select Bill To") {
         return {};
       }
