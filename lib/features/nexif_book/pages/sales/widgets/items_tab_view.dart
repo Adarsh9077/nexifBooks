@@ -6,6 +6,7 @@ import 'package:nexifbook/common/widget/reusable_text.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_item_modal.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_provider/sales_items_provider.dart';
 import 'package:number_paginator/number_paginator.dart';
+import '../../../../../common/widget/custom_otl_btn.dart';
 import 'data_table_widget.dart';
 
 class ItemsTabView extends ConsumerWidget {
@@ -183,7 +184,21 @@ class ItemsTabView extends ConsumerWidget {
           ),
         );
       },
-      error: (err, _) => Text("Error: $err"),
+      error: (err, _) => GestureDetector(
+        onTap: (){
+          ref.read(salesItemsProvider.notifier).updateSearch(query);
+        },
+        child: Center(
+          child: CustomOtlBtn(
+            width: 155,
+            height: 45,
+            color: AppConst.kBlueLight,
+            text: " Refresh",
+            iconData: true,
+            iconWidget: Icon(Icons.refresh,color: AppConst.kBlueLight,),
+          ),
+        ),
+      ),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
   }

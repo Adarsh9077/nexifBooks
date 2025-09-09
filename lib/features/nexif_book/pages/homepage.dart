@@ -11,6 +11,7 @@ import 'package:nexifbook/features/auth/services/auth_service.dart';
 // import 'package:nexifbook/features/nexif_book/pages/json_display_page.dart';
 import 'package:nexifbook/features/nexif_book/widgets/app_bar.dart';
 import 'package:nexifbook/features/nexif_book/widgets/custom_drawer.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -31,12 +32,12 @@ class _HomePageState extends ConsumerState<HomePage> {
     // TODO: implement initState
     super.initState();
     // fetchUserData();
+    fetchUserData();
     _startLoadingTimer();
   }
 
   void _startLoadingTimer() async {
-    fetchUserData();
-    await Future.delayed(const Duration(seconds: 4));
+    await Future.delayed(const Duration(seconds: 2));
     setState(() {
       _isLoading = false;
     });
@@ -57,7 +58,15 @@ class _HomePageState extends ConsumerState<HomePage> {
       body: Padding(
         padding: const EdgeInsets.all(18.0),
         child: _isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? Shimmer.fromColors(
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade400,
+                child: Container(
+                  height: 26,
+                  width: 299,
+                  color: Colors.grey.shade200,
+                ),
+              )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.end,

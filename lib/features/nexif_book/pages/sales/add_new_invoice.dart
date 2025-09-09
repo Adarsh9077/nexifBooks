@@ -18,9 +18,6 @@ class AddNewInvoice extends ConsumerStatefulWidget {
 }
 
 class _AddNewInvoiceState extends ConsumerState<AddNewInvoice> {
-  TextEditingController invoiceNumberController = TextEditingController();
-  TextEditingController invoiceDateController = TextEditingController();
-
   @override
   void initState() {
     // TODO: implement initState
@@ -28,10 +25,15 @@ class _AddNewInvoiceState extends ConsumerState<AddNewInvoice> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     print("object Build method");
-    // final invoiceBillToList = ref.watch(invoiceBillToProvider);
     return Scaffold(
       appBar: CustomAppBar(title: "Add New Sales Invoice", isHomePage: false),
       backgroundColor: AppConst.kLight,
@@ -230,7 +232,10 @@ class _AddNewInvoiceState extends ConsumerState<AddNewInvoice> {
                 }
                 return billToDetails.when(
                   data: (data) {
-                    return Text("$data");
+                    return Text(
+                      " ${data['bookkeeping']["outstanding"]}",
+                      style: appStyle(16, FontWeight.w400, AppConst.kGreen),
+                    );
                   },
                   error: (error, st) {
                     return Text("error");

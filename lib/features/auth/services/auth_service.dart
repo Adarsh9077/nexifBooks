@@ -45,7 +45,7 @@ class AuthService {
       final response = await dio.get("auth/users/me/");
       return response.data;
     } catch (e) {
-      return null;
+      rethrow;
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nexifbook/common/utils/constants.dart';
 import 'package:nexifbook/common/widget/app_style.dart';
+import 'package:nexifbook/common/widget/custom_otl_btn.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invoice_modal.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_provider/sales_invoice_provider.dart';
@@ -16,9 +17,7 @@ class InvoiceTabView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final invoicesAsync = ref.watch(salesInvoiceProvider);
-    final controller = ref.read(
-      salesInvoiceProvider.notifier,
-    );
+    final controller = ref.read(salesInvoiceProvider.notifier);
     final currentPage = controller.currentPage;
 
     return invoicesAsync.when(
@@ -136,7 +135,21 @@ class InvoiceTabView extends ConsumerWidget {
           ),
         );
       },
-      error: (err, _) => Text("Error: $err"),
+      error: (err, _) => GestureDetector(
+        onTap: (){
+          ref.read(salesInvoiceProvider.notifier).updateSearch(query);
+        },
+        child: Center(
+          child: CustomOtlBtn(
+            width: 155,
+            height: 45,
+            color: AppConst.kBlueLight,
+            text: " Refresh",
+            iconData: true,
+            iconWidget: Icon(Icons.refresh,color: AppConst.kBlueLight,),
+          ),
+        ),
+      ),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
