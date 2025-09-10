@@ -7,17 +7,19 @@ class LoadingListWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Expanded(
+    return SizedBox(
+      height: 400,
       child: ListView.builder(
-        itemCount: 5,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: 10,
         itemBuilder: (context, index) => Shimmer.fromColors(
           baseColor: Colors.grey.shade300,
           highlightColor: Colors.grey.shade400,
           child: Container(
             width: 280,
-            height: 15,
+            height: 20,
             margin: EdgeInsets.only(
-              bottom: 8,
+              bottom: 16,
               top: index == 0 ? 8 : 0,
             ),
             color: Colors.grey.shade500,

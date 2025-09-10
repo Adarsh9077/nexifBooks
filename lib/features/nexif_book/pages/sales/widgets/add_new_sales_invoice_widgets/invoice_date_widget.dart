@@ -22,7 +22,6 @@ class InvoiceDateWidget extends ConsumerWidget {
           minTime: DateTime(2018, 3, 5),
           maxTime: DateTime(2050, 12, 31),
           onConfirm: (date) {
-            print('confirm ********\n$date');
             ref.read(invoiceDateProvider.notifier).state = date
                 .toString()
                 .substring(0, 10);
@@ -34,7 +33,6 @@ class InvoiceDateWidget extends ConsumerWidget {
       child: Consumer(
         builder: (context, ref, child) {
           final invoiceDate = ref.watch(invoiceDateProvider);
-          print("object Build Consumer");
           return Container(
             width: size.width,
             height: 48,

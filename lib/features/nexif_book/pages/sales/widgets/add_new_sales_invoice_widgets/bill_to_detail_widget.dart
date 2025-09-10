@@ -1,6 +1,6 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import '../../../../../../common/utils/constants.dart';
 import '../../../../../../common/widget/app_style.dart';
 import '../../../../../../common/widget/height_spacer.dart';
@@ -25,6 +25,7 @@ class BillToDetailWidget extends ConsumerWidget {
           return SizedBox();
         }
         return billToDetails.when(
+          // skipLoadingOnRefresh: false,
           data: (data) {
             String outstanding = data["bookkeeping"]["outstanding"] >= 0
                 ? "₹${data["bookkeeping"]["outstanding"]} payment done in advance"
@@ -33,17 +34,18 @@ class BillToDetailWidget extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  HeightSpacer(height: 12),
+                  HeightSpacer(height: 5),
                   data["bookkeeping"]["outstanding"] != 0
                       ? Column(
                           children: [
                             ReusableText(
                               text: outstanding,
                               style: appStyle(
-                                18,
+                                16,
                                 FontWeight.w400,
-                                AppConst.kGreyLight,
+                                AppConst.kGreen,
                               ),
                             ),
                             HeightSpacer(height: 5),
@@ -60,6 +62,52 @@ class BillToDetailWidget extends ConsumerWidget {
                       ),
                       AddRowBtn(onPressed: () {}),
                     ],
+                  ),
+                  HeightSpacer(height: 5),
+                  SizedBox(
+                    height: 280,
+                    child: DataTable2(
+                      columnSpacing: 12,
+                      horizontalMargin: 12,
+                      minWidth: 1600,
+                      columns: [
+                        DataColumn(label: Text('S No.')),
+                        DataColumn(label: Text('Item')),
+                        DataColumn(label: Text('HSN')),
+                        DataColumn(label: Text('Batch No.')),
+                        DataColumn(label: Text('Mfg Date')),
+                        DataColumn(label: Text('Exp Date')),
+                        DataColumn(label: Text('MRP')),
+                        DataColumn(label: Text('Quantity')),
+                        DataColumn(label: Text('Discount')),
+                        DataColumn(label: Text('Rate')),
+                        DataColumn(label: Text('Taxable Amt')),
+                        DataColumn(label: Text('Gst Rate')),
+                        DataColumn(label: Text('Total')),
+                        DataColumn(label: Text('Action')),
+                      ],
+                      rows: [
+                        DataRow(
+                          cells: [
+                            DataCell(Text("Row A")),
+                            DataCell(Text("Row B")),
+                            DataCell(Text("Row C")),
+                            DataCell(Text("Row D")),
+                            DataCell(Text("Row E")),
+                            DataCell(Text("Row F")),
+                            DataCell(Text("Row G")),
+                            DataCell(Text("Row H")),
+                            DataCell(Text("Row I")),
+                            DataCell(Text("Row J")),
+                            DataCell(Text("Row K")),
+                            DataCell(Text("Row L")),
+                            DataCell(Text("Row M")),
+                            DataCell(Text("Row N")),
+                          ],
+                        ),
+
+                      ],
+                    ),
                   ),
                 ],
               ),

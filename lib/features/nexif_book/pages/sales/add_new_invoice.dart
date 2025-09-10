@@ -35,15 +35,14 @@ class _AddNewInvoiceState extends ConsumerState<AddNewInvoice> {
         height: size.height,
         width: size.width,
         padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             ReusableText(
               text: " Invoice Number",
               style: appStyle(18, FontWeight.w400, AppConst.kGreyLight),
             ),
             const HeightSpacer(height: 5),
-            InvoiceNumberWidget(size: size),
+            SizedBox(height: 48, child: InvoiceNumberWidget(size: size)),
             const HeightSpacer(height: 16),
             ReusableText(
               text: " Invoice Date",
