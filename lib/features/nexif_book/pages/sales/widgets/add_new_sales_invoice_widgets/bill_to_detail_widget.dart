@@ -1,4 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../../../common/utils/constants.dart';
@@ -70,8 +71,9 @@ class BillToDetailWidget extends ConsumerWidget {
                       columnSpacing: 12,
                       horizontalMargin: 12,
                       minWidth: 1600,
+                      fixedLeftColumns: 1,
                       columns: [
-                        DataColumn(label: Text('S No.')),
+                        DataColumn2(label: Text('S No.'), fixedWidth: 40),
                         DataColumn(label: Text('Item')),
                         DataColumn(label: Text('HSN')),
                         DataColumn(label: Text('Batch No.')),
@@ -87,25 +89,45 @@ class BillToDetailWidget extends ConsumerWidget {
                         DataColumn(label: Text('Action')),
                       ],
                       rows: [
-                        DataRow(
-                          cells: [
-                            DataCell(Text("Row A")),
-                            DataCell(Text("Row B")),
-                            DataCell(Text("Row C")),
-                            DataCell(Text("Row D")),
-                            DataCell(Text("Row E")),
-                            DataCell(Text("Row F")),
-                            DataCell(Text("Row G")),
-                            DataCell(Text("Row H")),
-                            DataCell(Text("Row I")),
-                            DataCell(Text("Row J")),
-                            DataCell(Text("Row K")),
-                            DataCell(Text("Row L")),
-                            DataCell(Text("Row M")),
-                            DataCell(Text("Row N")),
-                          ],
-                        ),
-
+                        for (int i = 0; i < 4; i++)
+                          DataRow(
+                            cells: [
+                              DataCell(Text("${i + 1}")),
+                              DataCell(
+                                DropdownSearch<String>(
+                                  selectedItem: "Select",
+                                  items: (filter, infiniteScrollProps) => [
+                                    "Menu",
+                                    "Dialog",
+                                    "Modal",
+                                    "BottomSheet",
+                                  ],
+                                  decoratorProps: DropDownDecoratorProps(
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                  popupProps: PopupProps.menu(
+                                    fit: FlexFit.values[1],
+                                    constraints: BoxConstraints(),
+                                    showSearchBox: true
+                                  ),
+                                ),
+                              ),
+                              DataCell(Text("Row C")),
+                              DataCell(Text("Row D")),
+                              DataCell(Text("Row E")),
+                              DataCell(Text("Row F")),
+                              DataCell(Text("Row G")),
+                              DataCell(Text("Row H")),
+                              DataCell(Text("Row I")),
+                              DataCell(Text("Row J")),
+                              DataCell(Text("Row K")),
+                              DataCell(Text("Row L")),
+                              DataCell(Text("Row M")),
+                              DataCell(Text("Row N")),
+                            ],
+                          ),
                       ],
                     ),
                   ),
