@@ -1,4 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/items_sales_modal.dart';
 import '../../../../auth/services/auth_service.dart';
 import '../sales_modal/invoice_bill_to_modal.dart';
 
@@ -24,3 +25,59 @@ final billToDetailsProvider = FutureProvider.family
       }
       return await AuthService.getBillToDetails(billToId);
     });
+
+final selectedTableItemProvider = StateProvider.autoDispose<String>((ref) {
+  return "";
+});
+
+final fetchListOfItemsProvider = FutureProvider.family
+    .autoDispose<List<ItemsSalesModal>, String>((ref, query) async {
+      return await AuthService.fetchListOfItems(query: query);
+    });
+
+// class ItemsNotifier extends StateNotifier<AsyncValue<List<ItemsSalesModal>>> {
+//   ItemsNotifier(this.ref) : super(const AsyncValue.data([]));
+//
+//   final Ref ref;
+//   int _page = 1;
+//   bool _hasNext = true;
+//   String _query = "";
+//
+//   Future<void> fetchItems({String query = "", bool refresh = false}) async {
+//     if (refresh) {
+//       state = const AsyncValue.loading();
+//       _page = 1;
+//       _hasNext = true;
+//       _query = query;
+//     }
+//
+//     if (!_hasNext) return;
+//
+//     try {
+//       final result = await AuthService.fetchListOfItems(query: _query, page: _page);
+//
+//       final newItems = result["results"] as List<ItemsSalesModal>;
+//       final next = result["next"];
+//
+//       _hasNext = next != null;
+//       _page++;
+//
+//       state = AsyncValue.data([
+//         ...state.value ?? [],
+//         ...newItems,
+//       ]);
+//     } catch (e, st) {
+//       state = AsyncValue.error(e, st);
+//     }
+//   }
+//
+//   void reset() {
+//     state = const AsyncValue.data([]);
+//     _page = 1;
+//     _hasNext = true;
+//   }
+// }
+//
+// final itemsProvider =
+// StateNotifierProvider<ItemsNotifier, AsyncValue<List<ItemsSalesModal>>>(
+//         (ref) => ItemsNotifier(ref));

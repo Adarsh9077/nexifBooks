@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nexifbook/common/utils/constants.dart';
 import 'package:nexifbook/common/widget/app_style.dart';
-
-// import 'package:nexifbook/common/widget/custom_otl_btn.dart';
 import 'package:nexifbook/common/widget/height_spacer.dart';
 import 'package:nexifbook/common/widget/reusable_text.dart';
 import 'package:nexifbook/features/auth/services/auth_service.dart';
-
-// import 'package:nexifbook/features/nexif_book/pages/json_display_page.dart';
 import 'package:nexifbook/features/nexif_book/widgets/app_bar.dart';
 import 'package:nexifbook/features/nexif_book/widgets/custom_drawer.dart';
 import 'package:shimmer/shimmer.dart';
@@ -89,7 +85,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ),
                         );
                       }
-                      return Text("${userData!["id"]}");
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade400,
+                        child: Container(
+                          height: 25,
+                          width: 180,
+                          color: Colors.grey.shade100,
+                        ),
+                      );
                     },
                   ),
                   // CustomOtlBtn(

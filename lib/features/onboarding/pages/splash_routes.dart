@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nexifbook/common/utils/constants.dart';
 import 'package:nexifbook/features/nexif_book/pages/homepage.dart';
+import 'package:nexifbook/features/nexif_book/pages/sales/add_new_invoice.dart';
 import 'package:nexifbook/features/onboarding/pages/onboarding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,7 +32,9 @@ class SplashRoutes extends StatelessWidget {
           );
         }
         final loggedIn = snapshot.data!;
-        return loggedIn ? const HomePage() : Onboarding();
+        // return loggedIn ? const HomePage() : const Onboarding();
+        return loggedIn ? AddNewInvoice() : const Onboarding();
+
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/items_sales_modal.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_invoice_response.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/sales_item_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -200,9 +201,6 @@ class AuthService {
         "bookkeeping/ledger/outstanding/?customer_id=$billToId",
       );
       if (response.statusCode == 200 && responseBookkeeping.statusCode == 200) {
-        print(response.data);
-        print("\nobject \n");
-        print(responseBookkeeping.data);
         return {
           "customerDetail": response.data,
           "bookkeeping": responseBookkeeping.data,
@@ -214,4 +212,26 @@ class AuthService {
       rethrow;
     }
   }
+
+  static Future<List<ItemsSalesModal>> fetchListOfItems({
+    String query = "",
+  }) async {
+    try {
+      await setAuthHeader();
+      var companyId = await getCompanyDetails();
+      print(query);
+      final response = await dio.get(
+        "masters/skus/?search=$query&company_id=${companyId!["results"][0]["id"]}&page=1",
+      );
+      if (response.statusCode == 200) {
+        final results = response.data["results"] as List;
+        return results.map((e) => ItemsSalesModal.fromJson(e)).toList();
+      } else {
+        throw "Something Went Wrong";
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 }
