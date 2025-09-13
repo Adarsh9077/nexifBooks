@@ -65,7 +65,6 @@ class BillToWidget extends ConsumerWidget {
               style: appStyle(26, FontWeight.normal, AppConst.kRed),
             );
           },
-          // add Size variable
           loading: () => const AddNewBillToLoadingWidget(),
         );
       },

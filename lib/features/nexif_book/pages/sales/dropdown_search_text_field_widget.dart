@@ -46,13 +46,20 @@ class _DropdownSearchTextFieldWidgetState
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.only(
+                        top: 24,
+                        left: 14,
+                        right: 14,
+                        bottom: 0,
+                      ),
                       child: TextField(
                         controller: bottomController,
                         autofocus: true,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: "Search",
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         onChanged: (val) {
                           if (_debounce?.isActive ?? false) _debounce!.cancel();
@@ -71,38 +78,51 @@ class _DropdownSearchTextFieldWidgetState
                     Expanded(
                       child: Consumer(
                         builder: (sheetContext, sheetRef, child) {
-                          // watch provider (family) with currentQuery
                           final async = sheetRef.watch(
                             fetchListOfItemsProvider(currentQuery),
                           );
-
+                          // final itemList = sheetRef.watch(
+                          //   itemsProvider.notifier,
+                          // );
+                          // itemList.loadMore();
+                          // itemList.reset();
                           return async.when(
                             data: (items) {
                               if (items.isEmpty) {
                                 return const Center(child: Text('No results'));
                               }
-                              return ListView.separated(
-                                itemCount: items.length,
-                                separatorBuilder: (_, __) =>
-                                    const Divider(height: 1),
-                                itemBuilder: (context, index) {
-                                  final item = items[index];
-                                  return ListTile(
-                                    title: Text(item.name ?? ''),
-                                    onTap: () {
-                                      widget.controller.text = item.name ?? '';
-                                      sheetRef
-                                              .read(
-                                                selectedTableItemProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          item.id?.toString() ??
-                                          (item.name ?? '');
-                                      Navigator.pop(ctx);
-                                    },
-                                  );
-                                },
+
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 0,
+                                  left: 12,
+                                  right: 12,
+                                  bottom: 12,
+                                ),
+                                child: ListView.separated(
+                                  itemCount: items.length,
+                                  separatorBuilder: (_, __) =>
+                                      const Divider(height: 1),
+                                  itemBuilder: (context, index) {
+                                    final item = items[index];
+                                    return ListTile(
+                                      title: Text(item.name ?? ''),
+                                      onTap: () {
+                                        widget.controller.text =
+                                            item.name ?? '';
+                                        sheetRef
+                                                .read(
+                                                  selectedTableItemProvider
+                                                      .notifier,
+                                                )
+                                                .state =
+                                            item.id?.toString() ??
+                                            (item.name ?? '');
+                                        Navigator.pop(ctx);
+                                      },
+                                    );
+                                  },
+                                ),
                               );
                             },
                             loading: () => Padding(
@@ -133,10 +153,10 @@ class _DropdownSearchTextFieldWidgetState
       width: 250,
       child: TextField(
         controller: widget.controller,
-        readOnly: true, // open search sheet instead of inline suggestions
-        decoration: const InputDecoration(
+        readOnly: true,
+        decoration: InputDecoration(
           labelText: 'Select',
-          border: OutlineInputBorder(),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         ),
         onTap: _openSearchSheet,

@@ -192,7 +192,6 @@ class BillToDetailWidget extends ConsumerStatefulWidget {
 // }
 
 class _BillToDetailWidgetState extends ConsumerState<BillToDetailWidget> {
-  // Keep one controller per row
   final List<TextEditingController> _controllers = List.generate(
     4,
     (_) => TextEditingController(),

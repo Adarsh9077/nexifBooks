@@ -234,4 +234,34 @@ class AuthService {
     }
   }
 
+  static Future<Map<String, dynamic>> fetchListOfItemsResponse({
+    String query = "",
+    int page = 1,
+  }) async {
+    try {
+      await setAuthHeader();
+      var companyId = await getCompanyDetails();
+      print("Query: $query, Page: $page");
+
+      final response = await dio.get(
+        "masters/skus/?search=$query&company_id=${companyId!["results"][0]["id"]}&page=$page",
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final results = (data["results"] as List)
+            .map((e) => ItemsSalesModal.fromJson(e))
+            .toList();
+
+        return {
+          "results": results,
+          "next": data["next"],
+        };
+      } else {
+        throw "Something Went Wrong";
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

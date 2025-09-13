@@ -35,49 +35,56 @@ final fetchListOfItemsProvider = FutureProvider.family
       return await AuthService.fetchListOfItems(query: query);
     });
 
-// class ItemsNotifier extends StateNotifier<AsyncValue<List<ItemsSalesModal>>> {
-//   ItemsNotifier(this.ref) : super(const AsyncValue.data([]));
-//
-//   final Ref ref;
-//   int _page = 1;
-//   bool _hasNext = true;
-//   String _query = "";
-//
-//   Future<void> fetchItems({String query = "", bool refresh = false}) async {
-//     if (refresh) {
-//       state = const AsyncValue.loading();
-//       _page = 1;
-//       _hasNext = true;
-//       _query = query;
-//     }
-//
-//     if (!_hasNext) return;
-//
-//     try {
-//       final result = await AuthService.fetchListOfItems(query: _query, page: _page);
-//
-//       final newItems = result["results"] as List<ItemsSalesModal>;
-//       final next = result["next"];
-//
-//       _hasNext = next != null;
-//       _page++;
-//
-//       state = AsyncValue.data([
-//         ...state.value ?? [],
-//         ...newItems,
-//       ]);
-//     } catch (e, st) {
-//       state = AsyncValue.error(e, st);
-//     }
-//   }
-//
-//   void reset() {
-//     state = const AsyncValue.data([]);
-//     _page = 1;
-//     _hasNext = true;
-//   }
-// }
-//
-// final itemsProvider =
-// StateNotifierProvider<ItemsNotifier, AsyncValue<List<ItemsSalesModal>>>(
-//         (ref) => ItemsNotifier(ref));
+class ItemsNotifier extends StateNotifier<AsyncValue<List<ItemsSalesModal>>> {
+  ItemsNotifier(this.ref) : super(const AsyncValue.data([]));
+
+  final Ref ref;
+  int _page = 1;
+  bool _hasNext = true;
+  String _query = "";
+
+  Future<void> fetchItems({String query = "", bool refresh = false}) async {
+    if (refresh) {
+      state = const AsyncValue.loading();
+      _page = 1;
+      _hasNext = true;
+      _query = query;
+    }
+
+    if (!_hasNext) return;
+
+    try {
+      final result = await AuthService.fetchListOfItemsResponse(
+        query: _query,
+        page: _page,
+      );
+
+      final newItems = result["results"] as List<ItemsSalesModal>;
+      final next = result["next"];
+
+      _hasNext = next != null;
+      _page++;
+
+      state = AsyncValue.data([
+        ...state.value ?? [],
+        ...newItems,
+      ]);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  Future<void> loadMore() async {
+    await fetchItems();
+  }
+
+  void reset() {
+    state = const AsyncValue.data([]);
+    _page = 1;
+    _hasNext = true;
+  }
+}
+
+final itemsProvider =
+StateNotifierProvider<ItemsNotifier, AsyncValue<List<ItemsSalesModal>>>(
+        (ref) => ItemsNotifier(ref));
