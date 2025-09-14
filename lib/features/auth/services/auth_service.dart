@@ -213,7 +213,7 @@ class AuthService {
     }
   }
 
-  static Future<List<ItemsSalesModal>> fetchListOfItems({
+  static Future<List<ItemsSalesModal>> fetchListOfItemsOld({
     String query = "",
   }) async {
     try {
@@ -234,7 +234,7 @@ class AuthService {
     }
   }
 
-  static Future<Map<String, dynamic>> fetchListOfItemsResponse({
+  static Future<Map<String, dynamic>> fetchListOfItems({
     String query = "",
     int page = 1,
   }) async {

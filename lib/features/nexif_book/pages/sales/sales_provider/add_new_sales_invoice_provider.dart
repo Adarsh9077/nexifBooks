@@ -32,7 +32,7 @@ final selectedTableItemProvider = StateProvider.autoDispose<String>((ref) {
 
 final fetchListOfItemsProvider = FutureProvider.family
     .autoDispose<List<ItemsSalesModal>, String>((ref, query) async {
-      return await AuthService.fetchListOfItems(query: query);
+      return await AuthService.fetchListOfItemsOld(query: query);
     });
 
 class ItemsNotifier extends StateNotifier<AsyncValue<List<ItemsSalesModal>>> {
@@ -42,8 +42,12 @@ class ItemsNotifier extends StateNotifier<AsyncValue<List<ItemsSalesModal>>> {
   int _page = 1;
   bool _hasNext = true;
   String _query = "";
+  bool _isFetching = false;
 
   Future<void> fetchItems({String query = "", bool refresh = false}) async {
+    if (_isFetching) return; // prevent duplicate calls
+    _isFetching = true;
+
     if (refresh) {
       state = const AsyncValue.loading();
       _page = 1;
@@ -51,10 +55,13 @@ class ItemsNotifier extends StateNotifier<AsyncValue<List<ItemsSalesModal>>> {
       _query = query;
     }
 
-    if (!_hasNext) return;
+    if (!_hasNext) {
+      _isFetching = false;
+      return;
+    }
 
     try {
-      final result = await AuthService.fetchListOfItemsResponse(
+      final result = await AuthService.fetchListOfItems(
         query: _query,
         page: _page,
       );
@@ -66,11 +73,13 @@ class ItemsNotifier extends StateNotifier<AsyncValue<List<ItemsSalesModal>>> {
       _page++;
 
       state = AsyncValue.data([
-        ...state.value ?? [],
+        if (!refresh) ...state.value ?? [],
         ...newItems,
       ]);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
+    } finally {
+      _isFetching = false;
     }
   }
 
@@ -87,4 +96,5 @@ class ItemsNotifier extends StateNotifier<AsyncValue<List<ItemsSalesModal>>> {
 
 final itemsProvider =
 StateNotifierProvider<ItemsNotifier, AsyncValue<List<ItemsSalesModal>>>(
-        (ref) => ItemsNotifier(ref));
+      (ref) => ItemsNotifier(ref),
+);
