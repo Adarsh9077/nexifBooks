@@ -4,16 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'sales_provider/add_new_sales_invoice_provider.dart';
 import 'widgets/add_new_sales_invoice_widgets/loading_list_widget.dart';
 
-// class DropdownSearchTextFieldWidget extends ConsumerStatefulWidget {
-//   const DropdownSearchTextFieldWidget({super.key, required this.controller});
-//
-//   final TextEditingController controller;
-//
-//   @override
-//   ConsumerState<DropdownSearchTextFieldWidget> createState() =>
-//       _DropdownSearchTextFieldWidgetState();
-// }
-
 class DropdownSearchTextFieldWidget extends ConsumerStatefulWidget {
   const DropdownSearchTextFieldWidget({super.key, required this.controller});
 
@@ -61,6 +51,10 @@ class _DropdownSearchTextFieldWidgetState
           builder: (sheetContext, sheetRef, _) {
             final notifier = sheetRef.read(itemsProvider.notifier);
 
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              notifier.fetchItems(query: "", refresh: true);
+            });
+
             return Padding(
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(ctx).viewInsets.bottom,
@@ -92,7 +86,6 @@ class _DropdownSearchTextFieldWidgetState
                         },
                       ),
                     ),
-
                     Expanded(
                       child: Consumer(
                         builder: (_, ref, __) {
@@ -100,25 +93,49 @@ class _DropdownSearchTextFieldWidgetState
 
                           return state.when(
                             data: (items) {
-                              if (items.isEmpty) {
-                                return const Center(child: Text('No results'));
+                              final query = bottomController.text.trim();
+
+                              if (items.isEmpty && query.isEmpty) {
+                                return const Center(
+                                    child: Text("No results found"));
                               }
+
                               return ListView.separated(
                                 controller: _scrollController,
-                                itemCount: items.length,
+                                itemCount: items.length +
+                                    (query.isNotEmpty ? 1 : 0),
                                 separatorBuilder: (_, __) =>
                                 const Divider(height: 1),
                                 itemBuilder: (context, index) {
-                                  final item = items[index];
+                                  if (index < items.length) {
+                                    final item = items[index];
+                                    return ListTile(
+                                      title: Text(item.name ?? ''),
+                                      onTap: () {
+                                        widget.controller.text =
+                                            item.name ?? '';
+                                        ref
+                                            .read(selectedTableItemProvider
+                                            .notifier)
+                                            .state = item.id?.toString() ??
+                                            (item.name ?? '');
+                                        Navigator.pop(ctx);
+                                      },
+                                    );
+                                  }
                                   return ListTile(
-                                    title: Text(item.name ?? ''),
+                                    leading: const Icon(Icons.add),
+                                    title: Text(
+                                      'Create "$query"',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                     onTap: () {
-                                      widget.controller.text = item.name ?? '';
+                                      widget.controller.text = query;
                                       ref
-                                          .read(
-                                          selectedTableItemProvider.notifier)
-                                          .state = item.id?.toString() ??
-                                          (item.name ?? '');
+                                          .read(selectedTableItemProvider
+                                          .notifier)
+                                          .state = query;
                                       Navigator.pop(ctx);
                                     },
                                   );
@@ -160,3 +177,9 @@ class _DropdownSearchTextFieldWidgetState
     );
   }
 }
+
+
+// all good
+// add a condition that if (list.length is 10 or 10> list.length ){
+// scroll and refreash not woking }
+// all code as well as came

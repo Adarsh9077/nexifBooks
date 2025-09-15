@@ -45,7 +45,7 @@ class ItemsNotifier extends StateNotifier<AsyncValue<List<ItemsSalesModal>>> {
   bool _isFetching = false;
 
   Future<void> fetchItems({String query = "", bool refresh = false}) async {
-    if (_isFetching) return; // prevent duplicate calls
+    if (_isFetching) return;
     _isFetching = true;
 
     if (refresh) {
@@ -84,13 +84,14 @@ class ItemsNotifier extends StateNotifier<AsyncValue<List<ItemsSalesModal>>> {
   }
 
   Future<void> loadMore() async {
-    await fetchItems();
+    await fetchItems(query: _query);
   }
 
   void reset() {
     state = const AsyncValue.data([]);
     _page = 1;
     _hasNext = true;
+    _query = "";
   }
 }
 
