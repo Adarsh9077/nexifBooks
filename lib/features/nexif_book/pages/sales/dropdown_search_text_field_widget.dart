@@ -18,6 +18,7 @@ class _DropdownSearchTextFieldWidgetState
     extends ConsumerState<DropdownSearchTextFieldWidget> {
   final ScrollController _scrollController = ScrollController();
   Timer? _debounce;
+  bool _initialFetchDone = false;
 
   @override
   void initState() {
@@ -26,9 +27,14 @@ class _DropdownSearchTextFieldWidgetState
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      ref.read(itemsProvider.notifier).loadMore();
+    final state = ref.read(itemsProvider);
+    if (state.hasValue) {
+      final itemsState = state.value!;
+      if (itemsState.next != null &&
+          _scrollController.position.pixels >=
+              _scrollController.position.maxScrollExtent - 200) {
+        ref.read(itemsProvider.notifier).loadMore();
+      }
     }
   }
 
@@ -44,16 +50,20 @@ class _DropdownSearchTextFieldWidgetState
       context: context,
       isScrollControlled: true,
       builder: (ctx) {
-        final TextEditingController bottomController =
-        TextEditingController(text: widget.controller.text);
+        final TextEditingController bottomController = TextEditingController(
+          text: widget.controller.text,
+        );
 
         return Consumer(
           builder: (sheetContext, sheetRef, _) {
             final notifier = sheetRef.read(itemsProvider.notifier);
 
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              notifier.fetchItems(query: "", refresh: true);
-            });
+            if (!_initialFetchDone && bottomController.text.isEmpty) {
+              _initialFetchDone = true;
+              Future.microtask(() {
+                notifier.fetchItems(query: "", refresh: true);
+              });
+            }
 
             return Padding(
               padding: EdgeInsets.only(
@@ -64,8 +74,11 @@ class _DropdownSearchTextFieldWidgetState
                 child: Column(
                   children: [
                     Padding(
-                      padding:
-                      const EdgeInsets.only(top: 24, left: 14, right: 14),
+                      padding: const EdgeInsets.only(
+                        top: 24,
+                        left: 14,
+                        right: 14,
+                      ),
                       child: TextField(
                         controller: bottomController,
                         autofocus: true,
@@ -76,12 +89,20 @@ class _DropdownSearchTextFieldWidgetState
                           ),
                         ),
                         onChanged: (val) {
-                          if (_debounce?.isActive ?? false) _debounce!.cancel();
+                          _debounce?.cancel();
                           _debounce = Timer(
-                            const Duration(milliseconds: 300),
+                            const Duration(milliseconds: 800),
                                 () {
-                              notifier.fetchItems(query: val, refresh: true);
+                              final latest = bottomController.text.trim();
+                              notifier.fetchItems(query: latest, refresh: true);
                             },
+                          );
+                        },
+                        onSubmitted: (v) {
+                          _debounce?.cancel();
+                          notifier.fetchItems(
+                            query: bottomController.text.trim(),
+                            refresh: true,
                           );
                         },
                       ),
@@ -90,20 +111,21 @@ class _DropdownSearchTextFieldWidgetState
                       child: Consumer(
                         builder: (_, ref, __) {
                           final state = ref.watch(itemsProvider);
-
                           return state.when(
-                            data: (items) {
+                            data: (itemsState) {
+                              final items = itemsState.items;
+                              // final next = itemsState.next;
                               final query = bottomController.text.trim();
 
                               if (items.isEmpty && query.isEmpty) {
                                 return const Center(
-                                    child: Text("No results found"));
+                                  child: Text("No results found"),
+                                );
                               }
 
                               return ListView.separated(
                                 controller: _scrollController,
-                                itemCount: items.length +
-                                    (query.isNotEmpty ? 1 : 0),
+                                itemCount: items.length + (query.isNotEmpty ? 1 : 0),
                                 separatorBuilder: (_, __) =>
                                 const Divider(height: 1),
                                 itemBuilder: (context, index) {
@@ -112,14 +134,14 @@ class _DropdownSearchTextFieldWidgetState
                                     return ListTile(
                                       title: Text(item.name ?? ''),
                                       onTap: () {
-                                        widget.controller.text =
-                                            item.name ?? '';
+                                        widget.controller.text = item.name ?? '';
                                         ref
-                                            .read(selectedTableItemProvider
-                                            .notifier)
+                                            .read(selectedTableItemProvider.notifier)
                                             .state = item.id?.toString() ??
                                             (item.name ?? '');
-                                        Navigator.pop(ctx);
+                                        Navigator.of(ctx).maybePop().then((_) {
+                                          _initialFetchDone = false;
+                                        });
                                       },
                                     );
                                   }
@@ -128,15 +150,17 @@ class _DropdownSearchTextFieldWidgetState
                                     title: Text(
                                       'Create "$query"',
                                       style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     onTap: () {
                                       widget.controller.text = query;
                                       ref
-                                          .read(selectedTableItemProvider
-                                          .notifier)
+                                          .read(selectedTableItemProvider.notifier)
                                           .state = query;
-                                      Navigator.pop(ctx);
+                                      Navigator.of(ctx).maybePop().then((_) {
+                                        _initialFetchDone = false;
+                                      });
                                     },
                                   );
                                 },
@@ -156,7 +180,9 @@ class _DropdownSearchTextFieldWidgetState
           },
         );
       },
-    );
+    ).whenComplete(() {
+      _initialFetchDone = false;
+    });
   }
 
   @override
@@ -169,17 +195,13 @@ class _DropdownSearchTextFieldWidgetState
         decoration: InputDecoration(
           labelText: 'Select',
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          contentPadding:
-          const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 8,
+            vertical: 6,
+          ),
         ),
         onTap: _openSearchSheet,
       ),
     );
   }
 }
-
-
-// all good
-// add a condition that if (list.length is 10 or 10> list.length ){
-// scroll and refreash not woking }
-// all code as well as came

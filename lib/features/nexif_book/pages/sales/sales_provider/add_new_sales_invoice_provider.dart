@@ -2,6 +2,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nexifbook/features/nexif_book/pages/sales/sales_modal/items_sales_modal.dart';
 import '../../../../auth/services/auth_service.dart';
 import '../sales_modal/invoice_bill_to_modal.dart';
+import '../sales_modal/items_state.dart';
 
 final invoiceDateProvider = StateProvider<String>((ref) {
   return DateTime.now().toString().substring(0, 10);
@@ -35,12 +36,10 @@ final fetchListOfItemsProvider = FutureProvider.family
       return await AuthService.fetchListOfItemsOld(query: query);
     });
 
-class ItemsNotifier extends StateNotifier<AsyncValue<List<ItemsSalesModal>>> {
-  ItemsNotifier(this.ref) : super(const AsyncValue.data([]));
+class ItemsNotifier extends StateNotifier<AsyncValue<ItemsState>> {
+  ItemsNotifier(this.ref) : super(const AsyncValue.data(ItemsState()));
 
   final Ref ref;
-  int _page = 1;
-  bool _hasNext = true;
   String _query = "";
   bool _isFetching = false;
 
@@ -50,32 +49,31 @@ class ItemsNotifier extends StateNotifier<AsyncValue<List<ItemsSalesModal>>> {
 
     if (refresh) {
       state = const AsyncValue.loading();
-      _page = 1;
-      _hasNext = true;
       _query = query;
-    }
-
-    if (!_hasNext) {
-      _isFetching = false;
-      return;
+    } else {
+      final current = state.value;
+      if (current == null || current.next == null) {
+        _isFetching = false;
+        return;
+      }
     }
 
     try {
-      final result = await AuthService.fetchListOfItems(
+      final current = state.value;
+      final page = refresh ? 1 : ((current?.items.length ?? 0) ~/ 10 + 1);
+
+      final result = await AuthService.fetchListOfItemsResponse(
         query: _query,
-        page: _page,
+        page: page,
       );
-
       final newItems = result["results"] as List<ItemsSalesModal>;
-      final next = result["next"];
+      final next = result["next"] as String?;
 
-      _hasNext = next != null;
-      _page++;
+      final merged = refresh
+          ? newItems
+          : <ItemsSalesModal>[...(current?.items ?? []), ...newItems];
 
-      state = AsyncValue.data([
-        if (!refresh) ...state.value ?? [],
-        ...newItems,
-      ]);
+      state = AsyncValue.data(ItemsState(items: merged, next: next));
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     } finally {
@@ -88,14 +86,12 @@ class ItemsNotifier extends StateNotifier<AsyncValue<List<ItemsSalesModal>>> {
   }
 
   void reset() {
-    state = const AsyncValue.data([]);
-    _page = 1;
-    _hasNext = true;
+    state = const AsyncValue.data(ItemsState());
     _query = "";
   }
 }
 
 final itemsProvider =
-StateNotifierProvider<ItemsNotifier, AsyncValue<List<ItemsSalesModal>>>(
+    StateNotifierProvider<ItemsNotifier, AsyncValue<ItemsState>>(
       (ref) => ItemsNotifier(ref),
-);
+    );
