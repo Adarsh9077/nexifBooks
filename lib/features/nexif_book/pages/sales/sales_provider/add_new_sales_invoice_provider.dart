@@ -57,7 +57,7 @@ class ItemsNotifier extends StateNotifier<AsyncValue<ItemsState>> {
         return;
       }
     }
-
+    //
     try {
       final current = state.value;
       final page = refresh ? 1 : ((current?.items.length ?? 0) ~/ 10 + 1);
@@ -95,3 +95,7 @@ final itemsProvider =
     StateNotifierProvider<ItemsNotifier, AsyncValue<ItemsState>>(
       (ref) => ItemsNotifier(ref),
     );
+
+final paidCreditDropDownProvider = StateProvider<String>((ref) {
+  return "Paid";
+});
