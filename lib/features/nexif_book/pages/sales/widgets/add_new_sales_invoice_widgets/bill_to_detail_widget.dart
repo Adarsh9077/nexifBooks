@@ -1,7 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:nexifbook/features/nexif_book/pages/sales/widgets/add_new_sales_invoice_widgets/paid_credit_dropdown_widget.dart';
+import 'package:nexifbook/common/widget/custom_otl_btn.dart';
 import '../../../../../../common/utils/constants.dart';
 import '../../../../../../common/widget/app_style.dart';
 import '../../../../../../common/widget/height_spacer.dart';
@@ -10,7 +10,10 @@ import '../../dropdown_search_text_field_widget.dart';
 import '../../sales_provider/add_new_sales_invoice_provider.dart';
 import '../../sales_provider/row_controller.dart';
 import 'add_row_btn.dart';
+import 'amount_paid_text_editing_controller.dart';
 import 'loading_list_widget.dart';
+import 'paid_credit_dropdown_widget.dart';
+import 'title_value_row.dart';
 
 class BillToDetailWidget extends ConsumerStatefulWidget {
   const BillToDetailWidget({super.key});
@@ -25,12 +28,13 @@ class _BillToDetailWidgetState extends ConsumerState<BillToDetailWidget> {
   @override
   void initState() {
     super.initState();
-    // initialize with default rows
     final initialRows = 4;
     for (int i = 0; i < initialRows; i++) {
       _controllers.add(TextEditingController());
     }
   }
+
+  final TextEditingController amountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +66,7 @@ class _BillToDetailWidgetState extends ConsumerState<BillToDetailWidget> {
                 ? "₹${data["bookkeeping"]["outstanding"]} payment done in advance"
                 : "${data["bookkeeping"]["outstanding"]} payment due";
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -138,10 +142,7 @@ class _BillToDetailWidgetState extends ConsumerState<BillToDetailWidget> {
                                 GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      // ✅ remove controller of this row
                                       _controllers.removeAt(i);
-
-                                      // ✅ update provider count
                                       ref
                                           .read(rowControllerProvider.notifier)
                                           .state--;
@@ -175,11 +176,29 @@ class _BillToDetailWidgetState extends ConsumerState<BillToDetailWidget> {
                   PaidCreditDropdownWidget(),
                   HeightSpacer(height: 15),
                   ReusableText(
-                    text: "Amount",
+                    text: " Amount Paid:",
                     style: appStyle(20, FontWeight.w700, AppConst.kBKDark),
                   ),
                   HeightSpacer(height: 5),
-
+                  AmountPaidTextEditingController(controller: amountController),
+                  HeightSpacer(height: 15),
+                  TitleValueRow(title: " Total Before Tax :", value: "₹0.00"),
+                  TitleValueRow(title: " Total IGST :", value: "₹0.00"),
+                  TitleValueRow(
+                    title: " Total After Tax (Round Off):",
+                    value: "₹0.00",
+                  ),
+                  TitleValueRow(title: " Total in Words:", value: ""),
+                  HeightSpacer(height: 15),
+                  Center(child: Text("Partial Payment")),
+                  HeightSpacer(height: 5),
+                  CustomOtlBtn(
+                    width: double.infinity,
+                    height: 48,
+                    color: AppConst.kBlueLight,
+                    text: "Submit",
+                    iconData: false,
+                  ),
                 ],
               ),
             );
