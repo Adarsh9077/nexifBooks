@@ -59,7 +59,14 @@ class _BillToDetailWidgetState extends ConsumerState<BillToDetailWidget> {
             ),
           );
         }
+        final selectedTableItemId = ref.watch(selectedTableItemProvider);
+        print(
+          "${selectedTableItemId == "" ? "Nothing was there" :
+          selectedTableItemId} \nselectedTableItemId*****\n",
+        );
+        if (selectedTableItemId != "") {
 
+        }
         return billToDetails.when(
           data: (data) {
             String outstanding = data["bookkeeping"]["outstanding"] >= 0
