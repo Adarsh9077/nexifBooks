@@ -27,14 +27,9 @@ final billToDetailsProvider = FutureProvider.family
       return await AuthService.getBillToDetails(billToId);
     });
 
-final selectedTableItemProvider = StateProvider.autoDispose<String>((ref) {
-  return "";
+final selectedTableItemProvider = StateProvider.autoDispose<List<String>>((ref) {
+  return [];
 });
-
-final fetchListOfItemsProvider = FutureProvider.family
-    .autoDispose<List<ItemsSalesModal>, String>((ref, query) async {
-      return await AuthService.fetchListOfItemsOld(query: query);
-    });
 
 class ItemsNotifier extends StateNotifier<AsyncValue<ItemsState>> {
   ItemsNotifier(this.ref) : super(const AsyncValue.data(ItemsState()));
@@ -57,7 +52,7 @@ class ItemsNotifier extends StateNotifier<AsyncValue<ItemsState>> {
         return;
       }
     }
-    //
+
     try {
       final current = state.value;
       final page = refresh ? 1 : ((current?.items.length ?? 0) ~/ 10 + 1);

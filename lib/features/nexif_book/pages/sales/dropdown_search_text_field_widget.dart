@@ -137,8 +137,7 @@ class _DropdownSearchTextFieldWidgetState
                                         widget.controller.text = item.name ?? '';
                                         ref
                                             .read(selectedTableItemProvider.notifier)
-                                            .state = item.id?.toString() ??
-                                            (item.name ?? '');
+                                            .state.add(item.id?.toString() ?? '');
                                         Navigator.of(ctx).maybePop().then((_) {
                                           _initialFetchDone = false;
                                         });
@@ -155,9 +154,6 @@ class _DropdownSearchTextFieldWidgetState
                                     ),
                                     onTap: () {
                                       widget.controller.text = query;
-                                      ref
-                                          .read(selectedTableItemProvider.notifier)
-                                          .state = query;
                                       Navigator.of(ctx).maybePop().then((_) {
                                         _initialFetchDone = false;
                                       });

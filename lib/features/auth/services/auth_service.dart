@@ -8,7 +8,7 @@ class AuthService {
   static final Dio dio = Dio(
     BaseOptions(
       baseUrl:
-          'https://krgb6fwb7h.execute-api.ap-south-1.amazonaws.com/dev/api/',
+      'https://krgb6fwb7h.execute-api.ap-south-1.amazonaws.com/dev/api/',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -213,27 +213,6 @@ class AuthService {
     }
   }
 
-  static Future<List<ItemsSalesModal>> fetchListOfItemsOld({
-    String query = "",
-  }) async {
-    try {
-      await setAuthHeader();
-      var companyId = await getCompanyDetails();
-      print(query);
-      final response = await dio.get(
-        "masters/skus/?search=$query&company_id=${companyId!["results"][0]["id"]}&page=1",
-      );
-      if (response.statusCode == 200) {
-        final results = response.data["results"] as List;
-        return results.map((e) => ItemsSalesModal.fromJson(e)).toList();
-      } else {
-        throw "Something Went Wrong";
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   static Future<Map<String, dynamic>> fetchListOfItems({
     String query = "",
     int page = 1,
@@ -284,6 +263,20 @@ class AuthService {
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  static Future<Map<String, dynamic>> fetchSelectedItemData(
+      String itemId,) async {
+    try {
+      await setAuthHeader();
+      var companyId = await getCompanyDetails();
+      final response = await dio.get(
+        "masters/skus/$itemId/?company_id=${companyId!["results"][0]["id"]}",
+      );
+      return response.data;
+    } catch (e) {
+      return {};
     }
   }
 }

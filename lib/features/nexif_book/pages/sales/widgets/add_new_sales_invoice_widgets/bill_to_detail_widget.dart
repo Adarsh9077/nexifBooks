@@ -61,11 +61,16 @@ class _BillToDetailWidgetState extends ConsumerState<BillToDetailWidget> {
         }
         final selectedTableItemId = ref.watch(selectedTableItemProvider);
         print(
-          "${selectedTableItemId == "" ? "Nothing was there" :
-          selectedTableItemId} \nselectedTableItemId*****\n",
+          "${selectedTableItemId.isEmpty ?
+          "Nothing was there" : selectedTableItemId
+          } \nselectedTableItemId*****\n",
         );
-        if (selectedTableItemId != "") {
+        if (selectedTableItemId.isNotEmpty) {
+          print(selectedTableItemId.length);
+          for (int i = 0; i < selectedTableItemId.length; i++) {
+            // _controllers[i].text = selectedTableItemId[i];
 
+          }
         }
         return billToDetails.when(
           data: (data) {
