@@ -1,13 +1,22 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'sales_modal/items_state.dart';
 import 'sales_provider/add_new_sales_invoice_provider.dart';
 import 'widgets/add_new_sales_invoice_widgets/loading_list_widget.dart';
 
 class DropdownSearchTextFieldWidget extends ConsumerStatefulWidget {
-  const DropdownSearchTextFieldWidget({super.key, required this.controller});
+  DropdownSearchTextFieldWidget({
+    super.key,
+    required this.controller,
+    required this.onLoadMore,
+    required this.listOfDropdownListenable,
+  });
 
   final TextEditingController controller;
+  final ValueListenable<AsyncValue<ItemsState>> listOfDropdownListenable;
+  final void Function() onLoadMore;
 
   @override
   ConsumerState<DropdownSearchTextFieldWidget> createState() =>
@@ -27,13 +36,13 @@ class _DropdownSearchTextFieldWidgetState
   }
 
   void _onScroll() {
-    final state = ref.read(itemsProvider);
+    final state = widget.listOfDropdownListenable.value;
     if (state.hasValue) {
       final itemsState = state.value!;
       if (itemsState.next != null &&
           _scrollController.position.pixels >=
               _scrollController.position.maxScrollExtent - 200) {
-        ref.read(itemsProvider.notifier).loadMore();
+        widget.onLoadMore();
       }
     }
   }
@@ -58,6 +67,7 @@ class _DropdownSearchTextFieldWidgetState
           builder: (sheetContext, sheetRef, _) {
             final notifier = sheetRef.read(itemsProvider.notifier);
 
+            // initial fetch (only when sheet opens and input is empty)
             if (!_initialFetchDone && bottomController.text.isEmpty) {
               _initialFetchDone = true;
               Future.microtask(() {
@@ -73,6 +83,7 @@ class _DropdownSearchTextFieldWidgetState
                 height: MediaQuery.of(ctx).size.height * 0.55,
                 child: Column(
                   children: [
+                    // Search input
                     Padding(
                       padding: const EdgeInsets.only(
                         top: 24,
@@ -92,7 +103,7 @@ class _DropdownSearchTextFieldWidgetState
                           _debounce?.cancel();
                           _debounce = Timer(
                             const Duration(milliseconds: 800),
-                                () {
+                            () {
                               final latest = bottomController.text.trim();
                               notifier.fetchItems(query: latest, refresh: true);
                             },
@@ -108,13 +119,13 @@ class _DropdownSearchTextFieldWidgetState
                       ),
                     ),
                     Expanded(
-                      child: Consumer(
-                        builder: (_, ref, __) {
-                          final state = ref.watch(itemsProvider);
+                      child: ValueListenableBuilder<AsyncValue<ItemsState>>(
+                        valueListenable: widget.listOfDropdownListenable,
+                        builder: (context, state, child) {
+                          // state is AsyncValue<ItemsState> coming from parent
                           return state.when(
                             data: (itemsState) {
                               final items = itemsState.items;
-                              // final next = itemsState.next;
                               final query = bottomController.text.trim();
 
                               if (items.isEmpty && query.isEmpty) {
@@ -125,19 +136,37 @@ class _DropdownSearchTextFieldWidgetState
 
                               return ListView.separated(
                                 controller: _scrollController,
-                                itemCount: items.length + (query.isNotEmpty ? 1 : 0),
+                                itemCount:
+                                    items.length + (query.isNotEmpty ? 1 : 0),
                                 separatorBuilder: (_, __) =>
-                                const Divider(height: 1),
+                                    const Divider(height: 1),
                                 itemBuilder: (context, index) {
                                   if (index < items.length) {
                                     final item = items[index];
                                     return ListTile(
                                       title: Text(item.name ?? ''),
                                       onTap: () {
-                                        widget.controller.text = item.name ?? '';
+                                        widget.controller.text =
+                                            item.name ?? '';
+
+                                        // Update selected ids
                                         ref
-                                            .read(selectedTableItemProvider.notifier)
-                                            .state.add(item.id?.toString() ?? '');
+                                            .read(
+                                              selectedTableItemProvider
+                                                  .notifier,
+                                            )
+                                            .state
+                                            .add(item.id?.toString() ?? '');
+
+                                        if (item.id != null) {
+                                          ref
+                                              .read(
+                                                selectedTableItemNotifierProvider
+                                                    .notifier,
+                                              )
+                                              .fetchItems(item.id!.toString());
+                                        }
+
                                         Navigator.of(ctx).maybePop().then((_) {
                                           _initialFetchDone = false;
                                         });

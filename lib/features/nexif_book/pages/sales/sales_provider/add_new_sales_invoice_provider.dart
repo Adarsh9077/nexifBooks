@@ -27,7 +27,9 @@ final billToDetailsProvider = FutureProvider.family
       return await AuthService.getBillToDetails(billToId);
     });
 
-final selectedTableItemProvider = StateProvider.autoDispose<List<String>>((ref) {
+final selectedTableItemProvider = StateProvider.autoDispose<List<String>>((
+  ref,
+) {
   return [];
 });
 
@@ -94,3 +96,36 @@ final itemsProvider =
 final paidCreditDropDownProvider = StateProvider<String>((ref) {
   return "Paid";
 });
+
+class SelectedTableItemNotifier
+    extends StateNotifier<AsyncValue<List<Map<String, dynamic>>>> {
+  SelectedTableItemNotifier(this.ref) : super(const AsyncValue.data([]));
+
+  final Ref ref;
+  bool _isFetching = false;
+
+  Future<void> fetchItems(String itemId) async {
+    if (_isFetching) return;
+    _isFetching = true;
+
+    try {
+      final result = await AuthService.fetchSelectedItemData(itemId);
+      final mapResult = Map<String, dynamic>.from(result);
+
+      final currentList = [...(state.value ?? <Map<String, dynamic>>[])];
+      currentList.add(mapResult);
+
+      state = AsyncValue.data(currentList);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    } finally {
+      _isFetching = false;
+    }
+  }
+}
+
+final selectedTableItemNotifierProvider =
+    StateNotifierProvider<
+      SelectedTableItemNotifier,
+      AsyncValue<List<Map<String, dynamic>>>
+    >((ref) => SelectedTableItemNotifier(ref));

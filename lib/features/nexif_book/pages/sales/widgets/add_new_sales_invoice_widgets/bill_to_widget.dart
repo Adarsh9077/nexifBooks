@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../../../common/utils/constants.dart';
 import '../../../../../../common/widget/app_style.dart';
-import '../../../../../../common/widget/reusable_text.dart';
 import '../../sales_provider/add_new_sales_invoice_provider.dart';
 import 'add_new_bill_to_loading_widget.dart';
 
@@ -59,10 +58,15 @@ class BillToWidget extends ConsumerWidget {
               ),
             ),
           ),
-          error: (error, stackTrace) {
-            return ReusableText(
-              text: "Error : $error",
-              style: appStyle(26, FontWeight.normal, AppConst.kRed),
+          error: (error, _) {
+            // retry after 3 seconds
+            Future.delayed(const Duration(seconds: 1), () {
+              ref.watch(invoiceBillToProvider);
+            });
+
+            return Text(
+              "Retrying... Error: $error",
+              style: appStyle(20, FontWeight.normal, AppConst.kRed),
             );
           },
           loading: () => const AddNewBillToLoadingWidget(),

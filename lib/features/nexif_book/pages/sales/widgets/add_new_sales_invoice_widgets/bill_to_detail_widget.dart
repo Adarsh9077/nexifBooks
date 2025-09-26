@@ -2,12 +2,14 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nexifbook/common/widget/custom_otl_btn.dart';
+import 'package:nexifbook/features/nexif_book/pages/sales/widgets/add_new_sales_invoice_widgets/add_new_invoice_items_table.dart';
 import '../../../../../../common/utils/constants.dart';
 import '../../../../../../common/widget/app_style.dart';
 import '../../../../../../common/widget/height_spacer.dart';
 import '../../../../../../common/widget/reusable_text.dart';
 import '../../dropdown_search_text_field_widget.dart';
 import '../../sales_provider/add_new_sales_invoice_provider.dart';
+import '../../sales_provider/list_of_items_provider.dart';
 import '../../sales_provider/row_controller.dart';
 import 'add_row_btn.dart';
 import 'amount_paid_text_editing_controller.dart';
@@ -61,22 +63,21 @@ class _BillToDetailWidgetState extends ConsumerState<BillToDetailWidget> {
         }
         final selectedTableItemId = ref.watch(selectedTableItemProvider);
         print(
-          "${selectedTableItemId.isEmpty ?
-          "Nothing was there" : selectedTableItemId
-          } \nselectedTableItemId*****\n",
+          "${selectedTableItemId.isEmpty ? "Nothing was there" : selectedTableItemId} \nselectedTableItemId*****\n",
         );
+        final selectedItems = ref.watch(selectedTableItemNotifierProvider);
         if (selectedTableItemId.isNotEmpty) {
           print(selectedTableItemId.length);
-          for (int i = 0; i < selectedTableItemId.length; i++) {
-            // _controllers[i].text = selectedTableItemId[i];
-
-          }
+          // selectedTableItems = ref.watch(selectedTableItemNotifierProvider);
         }
         return billToDetails.when(
           data: (data) {
             String outstanding = data["bookkeeping"]["outstanding"] >= 0
                 ? "₹${data["bookkeeping"]["outstanding"]} payment done in advance"
                 : "${data["bookkeeping"]["outstanding"]} payment due";
+            ref.read(listOfItemsNotifierProvider.notifier).fetchListOfItems();
+            final listOfItems = ref.watch(listOfItemsNotifierProvider);
+            // print("${listOfItems.value}   List+++++++");
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
               child: Column(
@@ -108,75 +109,13 @@ class _BillToDetailWidgetState extends ConsumerState<BillToDetailWidget> {
                   HeightSpacer(height: 5),
                   SizedBox(
                     height: 62.0 * rowCount,
-                    child: DataTable2(
-                      columnSpacing: 12,
-                      horizontalMargin: 12,
-                      minWidth: 1600,
-                      fixedLeftColumns: 1,
-                      columns: const [
-                        DataColumn2(label: Text('S No.'), fixedWidth: 40),
-                        DataColumn(label: Text('Item')),
-                        DataColumn(label: Text('HSN')),
-                        DataColumn(label: Text('Batch No.')),
-                        DataColumn(label: Text('Mfg Date')),
-                        DataColumn(label: Text('Exp Date')),
-                        DataColumn(label: Text('MRP')),
-                        DataColumn(label: Text('Quantity')),
-                        DataColumn(label: Text('Discount')),
-                        DataColumn(label: Text('Rate')),
-                        DataColumn(label: Text('Taxable Amt')),
-                        DataColumn(label: Text('Gst Rate')),
-                        DataColumn(label: Text('Total')),
-                        DataColumn2(fixedWidth: 55, label: Text('Action')),
-                      ],
-                      rows: [
-                        for (int i = 0; i < rowCount; i++)
-                          DataRow(
-                            cells: [
-                              DataCell(Text("${i + 1}")),
-                              DataCell(
-                                DropdownSearchTextFieldWidget(
-                                  controller: _controllers[i],
-                                ),
-                              ),
-                              DataCell(Text("Row C $i")),
-                              DataCell(Text("Row D $i")),
-                              DataCell(Text("Row E $i")),
-                              DataCell(Text("Row F $i")),
-                              DataCell(Text("Row G $i")),
-                              DataCell(Text("Row H $i")),
-                              DataCell(Text("Row I $i")),
-                              DataCell(Text("Row J $i")),
-                              DataCell(Text("Row K $i")),
-                              DataCell(Text("Row L $i")),
-                              DataCell(Text("Row M $i")),
-                              DataCell(
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _controllers.removeAt(i);
-                                      ref
-                                          .read(rowControllerProvider.notifier)
-                                          .state--;
-                                    });
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: AppConst.kBlueLight,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Icon(
-                                      Icons.delete_forever_outlined,
-                                      size: 24,
-                                      color: AppConst.kLight,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                      ],
+                    child: AddNewInvoiceItemsTable(
+                      controllers: _controllers,
+                      rowCount: rowCount,
+                      deleteRow: () {
+                        ref.read(rowControllerProvider.notifier).state--;
+                      },
+                      listOfItems: listOfItems,
                     ),
                   ),
                   HeightSpacer(height: 15),
