@@ -1,16 +1,14 @@
-import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nexifbook/common/widget/custom_otl_btn.dart';
-import 'package:nexifbook/features/nexif_book/pages/sales/widgets/add_new_sales_invoice_widgets/add_new_invoice_items_table.dart';
 import '../../../../../../common/utils/constants.dart';
 import '../../../../../../common/widget/app_style.dart';
 import '../../../../../../common/widget/height_spacer.dart';
 import '../../../../../../common/widget/reusable_text.dart';
-import '../../dropdown_search_text_field_widget.dart';
 import '../../sales_provider/add_new_sales_invoice_provider.dart';
 import '../../sales_provider/list_of_items_provider.dart';
 import '../../sales_provider/row_controller.dart';
+import 'add_new_invoice_items_table.dart';
 import 'add_row_btn.dart';
 import 'amount_paid_text_editing_controller.dart';
 import 'loading_list_widget.dart';
@@ -63,7 +61,9 @@ class _BillToDetailWidgetState extends ConsumerState<BillToDetailWidget> {
         }
         final selectedTableItemId = ref.watch(selectedTableItemProvider);
         print(
-          "${selectedTableItemId.isEmpty ? "Nothing was there" : selectedTableItemId} \nselectedTableItemId*****\n",
+          "${selectedTableItemId.isEmpty ?
+          "Nothing was there" : selectedTableItemId} "
+              "\nselectedTableItemId*****\n",
         );
         final selectedItems = ref.watch(selectedTableItemNotifierProvider);
         if (selectedTableItemId.isNotEmpty) {
@@ -77,7 +77,6 @@ class _BillToDetailWidgetState extends ConsumerState<BillToDetailWidget> {
                 : "${data["bookkeeping"]["outstanding"]} payment due";
             ref.read(listOfItemsNotifierProvider.notifier).fetchListOfItems();
             final listOfItems = ref.watch(listOfItemsNotifierProvider);
-            // print("${listOfItems.value}   List+++++++");
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
               child: Column(

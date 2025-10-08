@@ -1,6 +1,8 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:nexifbook/features/auth/services/auth_service.dart';
+import 'package:nexifbook/features/nexif_book/pages/sales/sales_provider/list_of_items_provider.dart';
 import '../../../../../../common/utils/constants.dart';
 import '../../dropdown_search_text_field_widget.dart';
 import '../../sales_modal/items_state.dart';
@@ -21,12 +23,11 @@ class AddNewInvoiceItemsTable extends ConsumerWidget {
   final void Function() deleteRow;
   final AsyncValue<List<ListOfItemsModal>> listOfItems;
   late final ValueNotifier<AsyncValue<ItemsState>> itemsListenable;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     itemsListenable = ValueNotifier(ref.read(itemsProvider));
 
-    // keep it updated whenever itemsProvider changes
     ref.listen<AsyncValue<ItemsState>>(itemsProvider, (previous, next) {
       itemsListenable.value = next;
     });
@@ -60,11 +61,25 @@ class AddNewInvoiceItemsTable extends ConsumerWidget {
               DataCell(Text("${i + 1}")),
               DataCell(
                 DropdownSearchTextFieldWidget(
+                  index: i,
                   controller: controllers[i],
                   listOfDropdownListenable: itemsListenable,
                   onLoadMore: () {
-                    // parent triggers provider loadMore (keeps provider/api flow intact)
                     ref.read(itemsProvider.notifier).loadMore();
+                  },
+                  onSelectItem: () {
+                    // listOfItems.value![i].hashCode = "";
+                    final selectedItemIdIndex = ref.watch(
+                      selectedTableItemProvider,
+                    );
+                    AuthService.fetchSelectedItemData(selectedItemIdIndex[i]);
+                    // print(selectedItemIdIndex[1]);
+                    ref
+                        .read(listOfItemsNotifierProvider.notifier)
+                        .updateListOfItems(
+                          i,
+                          hsnCode: selectedItemIdIndex[i],
+                        );
                   },
                 ),
               ),

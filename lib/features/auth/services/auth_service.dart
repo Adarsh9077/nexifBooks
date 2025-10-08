@@ -274,6 +274,7 @@ class AuthService {
       final response = await dio.get(
         "masters/skus/$itemId/?company_id=${companyId!["results"][0]["id"]}",
       );
+      print(response.data);
       return response.data;
     } catch (e) {
       return {};

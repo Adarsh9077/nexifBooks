@@ -2,21 +2,27 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'sales_modal/items_sales_modal.dart';
 import 'sales_modal/items_state.dart';
 import 'sales_provider/add_new_sales_invoice_provider.dart';
+import 'sales_provider/list_of_items_provider.dart';
 import 'widgets/add_new_sales_invoice_widgets/loading_list_widget.dart';
 
 class DropdownSearchTextFieldWidget extends ConsumerStatefulWidget {
   DropdownSearchTextFieldWidget({
     super.key,
+    required this.index,
     required this.controller,
     required this.onLoadMore,
+    required this.onSelectItem,
     required this.listOfDropdownListenable,
   });
 
+  final int index;
   final TextEditingController controller;
   final ValueListenable<AsyncValue<ItemsState>> listOfDropdownListenable;
   final void Function() onLoadMore;
+  final void Function() onSelectItem;
 
   @override
   ConsumerState<DropdownSearchTextFieldWidget> createState() =>
@@ -54,6 +60,28 @@ class _DropdownSearchTextFieldWidgetState
     super.dispose();
   }
 
+  void onTapOfListItem(ItemsSalesModal item, BuildContext ctx, int index) {
+    widget.controller.text = item.name ?? '';
+    ref
+        .read(selectedTableItemProvider.notifier)
+        .state
+        .add(item.id?.toString() ?? '');
+
+    if (item.id != null) {
+      ref
+          .read(selectedTableItemNotifierProvider.notifier)
+          .fetchItems(item.id!.toString());
+      ref
+          .read(listOfItemsNotifierProvider.notifier)
+          .updateListOfItems(index, item: item.name, itemId: item.id);
+    }
+
+    Navigator.of(ctx).maybePop().then((_) {
+      _initialFetchDone = false;
+    });
+    widget.onSelectItem();
+  }
+
   void _openSearchSheet() {
     showModalBottomSheet(
       context: context,
@@ -67,7 +95,6 @@ class _DropdownSearchTextFieldWidgetState
           builder: (sheetContext, sheetRef, _) {
             final notifier = sheetRef.read(itemsProvider.notifier);
 
-            // initial fetch (only when sheet opens and input is empty)
             if (!_initialFetchDone && bottomController.text.isEmpty) {
               _initialFetchDone = true;
               Future.microtask(() {
@@ -83,7 +110,6 @@ class _DropdownSearchTextFieldWidgetState
                 height: MediaQuery.of(ctx).size.height * 0.55,
                 child: Column(
                   children: [
-                    // Search input
                     Padding(
                       padding: const EdgeInsets.only(
                         top: 24,
@@ -122,7 +148,6 @@ class _DropdownSearchTextFieldWidgetState
                       child: ValueListenableBuilder<AsyncValue<ItemsState>>(
                         valueListenable: widget.listOfDropdownListenable,
                         builder: (context, state, child) {
-                          // state is AsyncValue<ItemsState> coming from parent
                           return state.when(
                             data: (itemsState) {
                               final items = itemsState.items;
@@ -146,30 +171,7 @@ class _DropdownSearchTextFieldWidgetState
                                     return ListTile(
                                       title: Text(item.name ?? ''),
                                       onTap: () {
-                                        widget.controller.text =
-                                            item.name ?? '';
-
-                                        // Update selected ids
-                                        ref
-                                            .read(
-                                              selectedTableItemProvider
-                                                  .notifier,
-                                            )
-                                            .state
-                                            .add(item.id?.toString() ?? '');
-
-                                        if (item.id != null) {
-                                          ref
-                                              .read(
-                                                selectedTableItemNotifierProvider
-                                                    .notifier,
-                                              )
-                                              .fetchItems(item.id!.toString());
-                                        }
-
-                                        Navigator.of(ctx).maybePop().then((_) {
-                                          _initialFetchDone = false;
-                                        });
+                                        onTapOfListItem(item, ctx, index);
                                       },
                                     );
                                   }

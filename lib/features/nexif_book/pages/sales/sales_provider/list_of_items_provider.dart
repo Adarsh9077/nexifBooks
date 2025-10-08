@@ -42,37 +42,37 @@ class ListOfItemsNotifier
     }
   }
 
-//   Future<List<ListOfItemsModal>> updateListOfItems(
-//     int id,
-//     ListOfItemsModal item,
-//     int? totalAmt,
-//   ) async {
-//     try {
-//       _listOfItems[id] = item.copyWith(id: id, totalAmt: totalAmt);
-//       // state = AsyncValue.data(List.from(_listOfItems));
-//       return _listOfItems;
-//     } catch (e, st) {
-//       state = AsyncValue.error(e, st);
-//       rethrow;
-//     }
-//   }
+  //   Future<List<ListOfItemsModal>> updateListOfItems(
+  //     int id,
+  //     ListOfItemsModal item,
+  //     int? totalAmt,
+  //   ) async {
+  //     try {
+  //       _listOfItems[id] = item.copyWith(id: id, totalAmt: totalAmt);
+  //       // state = AsyncValue.data(List.from(_listOfItems));
+  //       return _listOfItems;
+  //     } catch (e, st) {
+  //       state = AsyncValue.error(e, st);
+  //       rethrow;
+  //     }
+  //   }
   Future<List<ListOfItemsModal>> updateListOfItems(
-      int index, {
-        int? id,
-        int? itemId,
-        String? item,
-        String? hsnCode,
-        String? batchNo,
-        String? mfgDate,
-        String? expDate,
-        double? mrp,
-        double? qty,
-        double? discount,
-        double? rate,
-        double? taxableAmt,
-        double? gstRate,
-        double? totalAmt,
-      }) async {
+    int index, {
+    int? id,
+    int? itemId,
+    String? item,
+    String? hsnCode,
+    String? batchNo,
+    String? mfgDate,
+    String? expDate,
+    double? mrp,
+    double? qty,
+    double? discount,
+    double? rate,
+    double? taxableAmt,
+    double? gstRate,
+    double? totalAmt,
+  }) async {
     try {
       final oldItem = _listOfItems[index];
 
@@ -102,7 +102,6 @@ class ListOfItemsNotifier
       rethrow;
     }
   }
-
 }
 
 final listOfItemsNotifierProvider =

@@ -59,11 +59,10 @@ class BillToWidget extends ConsumerWidget {
             ),
           ),
           error: (error, _) {
-            // retry after 3 seconds
             Future.delayed(const Duration(seconds: 1), () {
+              ref.invalidate(invoiceBillToProvider);
               ref.watch(invoiceBillToProvider);
             });
-
             return Text(
               "Retrying... Error: $error",
               style: appStyle(20, FontWeight.normal, AppConst.kRed),

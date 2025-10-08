@@ -27,7 +27,6 @@ class _AddNewInvoiceState extends ConsumerState<AddNewInvoice> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    print("object Build method");
     return Scaffold(
       appBar: CustomAppBar(title: "Add New Sales Invoice", isHomePage: false),
       backgroundColor: AppConst.kLight,

@@ -46,7 +46,6 @@ class PaidCreditDropdownWidget extends ConsumerWidget {
             onChanged: (value) {
               ref.read(paidCreditDropDownProvider.notifier).state = value
                   .toString();
-              print(value);
             },
           ),
         ),
